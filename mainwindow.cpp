@@ -28,7 +28,14 @@ MainWindow::MainWindow(QWidget *parent)
         UserCardsModel->setTable(USER_TABLE); //Указываем имя базы данных
         UserCardsModel->select(); //Запрашиваемм данные из базы
         UserCardsModel->setHeaderData(0, Qt::Horizontal, "ID", Qt::DisplayRole);
-        UserCardsModel->setHeaderData(2, Qt::Horizontal, "Дата Рождения", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(1, Qt::Horizontal, "ФИО", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(2, Qt::Horizontal, "Дата рождения", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(3, Qt::Horizontal, "E-MAIL", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(4, Qt::Horizontal, "Телефон", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(5, Qt::Horizontal, "Логин", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(6, Qt::Horizontal, "Пароль", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(7, Qt::Horizontal, "Баланс", Qt::DisplayRole);
+        UserCardsModel->setHeaderData(8, Qt::Horizontal, "Активен ли", Qt::DisplayRole);
 
         ui->tableView->setModel(UserCardsModel);
         ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
@@ -165,7 +172,6 @@ void MainWindow::ChangeButtonStatus(int Num)
         ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
     }
 }
-
 
 void MainWindow::on_UsersButton_clicked()
 {

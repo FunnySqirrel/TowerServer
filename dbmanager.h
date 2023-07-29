@@ -56,8 +56,8 @@ public:
     static bool create_event_table();
     static bool create_ticket_table();
 
-    static bool add_user(QString name, QString birthDate, QString eMail, QString phone, int balance, bool isActive, QString login, QString password);
-    static bool edit_user(QString name, QString birthDate, QString eMail, QString phone, int balance, bool isActive, QString login, QString password, int id);
+    static bool add_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password);
+    static bool edit_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password, int id);
     static void delete_user();
 
     static void get_user();

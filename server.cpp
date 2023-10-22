@@ -1,65 +1,69 @@
 #include "server.h"
-#include <QMessageBox>
-#include <QTimeEdit>
 
-void Server::sendToClient(QTcpSocket *pSocket, const QString &str)
+Server::Server()
 {
-    QByteArray arrBlock;
-    QDataStream out(&arrBlock, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_5_12);
-    out<<quint16(0)<<QTime::currentTime()<<str;
-    out.device()->seek(0);
-    out<<quint16(arrBlock.size()-sizeof(quint16));
-    pSocket->write(arrBlock);
-}
-
-Server::Server(int nPort)
-{
-    m_pTcpServer = new QTcpServer(this);
-    if (!m_pTcpServer->listen(QHostAddress::Any, nPort))
+    if (!this->listen(QHostAddress::Any, 2323))
     {
-        QMessageBox::critical(0,
-                              "ServerError",
-                              "Unable to start the server:"
-                              +m_pTcpServer->errorString());
-        m_pTcpServer->close();
+        qDebug()<<"Error! Server not started!";
         return;
     }
-    connect (m_pTcpServer, &QTcpServer::newConnection, this, &Server::slotNewConnection);
+    qDebug()<<"server started.";
 }
 
-void Server::slotNewConnection()
+void Server::SendToClient()
 {
-    QTcpSocket* pClientSocket = m_pTcpServer->nextPendingConnection();
-    connect(pClientSocket, &QTcpSocket::disconnected, pClientSocket, &QTcpSocket::deleteLater);
-    connect(pClientSocket, &QTcpSocket::readyRead, this, &Server::slotReadClient);
-    sendToClient(pClientSocket,"Server response: Connected");
+
 }
 
-void Server::slotReadClient()
+void Server::incomingConnection(qintptr socketDescriptor)
 {
-    QTcpSocket *pClientSocket = (QTcpSocket*)sender();
-    QDataStream in(pClientSocket);
-    in.setVersion(QDataStream::Qt_5_12);
-    for(;;)
+    m_pSocket = new QTcpSocket;
+    m_pSocket->setSocketDescriptor(socketDescriptor);
+    connect (m_pSocket, &QTcpSocket::readyRead, this, &Server::slotReadyRead);
+    connect (m_pSocket, &QTcpSocket::disconnected, m_pSocket, &QTcpSocket::deleteLater);
+    m_pSocketVector.push_back(m_pSocket);
+    qDebug()<<""<<socketDescriptor;
+}
+
+void Server::slotReadyRead()
+{
+    m_pSocket = (QTcpSocket*)sender();
+    qint16 blocksize=0;
+    QDataStream in(m_pSocket);
+    e_MsgType msgType;
+    in.setVersion(QDataStream::Qt_6_6);
+    if(in.status() == QDataStream::Ok)
     {
-        if(!m_nNextBlockSize)
+        while(true)
         {
-            if(pClientSocket->bytesAvailable()<sizeof(quint16))
+            if(blocksize == 0)
+            {
+                if(m_pSocket->bytesAvailable()<2)
+                {
+                    break;
+                }
+                in>>blocksize;
+            }
+            if(m_pSocket->bytesAvailable()<blocksize)
             {
                 break;
             }
-            in>>m_nNextBlockSize;
+            in>>msgType;
+            switch(msgType)
+            {
+            case e_MsgType::text:
+                break;
+            case e_MsgType::loginRequest:
+                break;
+            case e_MsgType::logoutRequest:
+                break;
+            default:
+                break;
+            }
         }
-        if(pClientSocket->bytesAvailable()<sizeof(m_nNextBlockSize))
-        {
-            break;
-        }
-        QTime time;
-        QString str;
-        in>>time>>str;
-        QString strMessage = time.toString()+" "+"Client has sent - "+str;
-        m_nNextBlockSize = 0;
-        sendToClient(pClientSocket, "Server Response: Received \"" +str+"\"");
+    }
+    else
+    {
+        qDebug()<<"Datastream Error!";
     }
 }

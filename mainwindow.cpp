@@ -48,9 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
         //ui->tableView->setSortingEnabled(true);
     }
     else ui->statusbar->showMessage("При подключении к базе данных произошла ошибка: " + UserCards.lastError().databaseText());
+    MyServer::pServer->serverInit();
 
-    //создаем сервер
-    m_pServer = new Server;
 }
 
 MainWindow::~MainWindow()

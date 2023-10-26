@@ -11,9 +11,9 @@ class Server : public QTcpServer
 
 public:
     Server();
+    void serverInit();
 
-    static QTcpSocket* m_pSocket;
-
+    QTcpSocket* m_pSocket;
     struct SocketName
     {
         QTcpSocket* pSocket;
@@ -37,6 +37,11 @@ public slots:
 
     void incomingConnection(qintptr socketDescriptor);      //слот на установку соединения
     void slotReadyRead();                                   //слот на прочтение данных
+};
+
+struct MyServer
+{
+    static Server* pServer;
 };
 
 #endif // SERVER_H

@@ -1,8 +1,10 @@
 #include "server.h"
 
-QTcpSocket* Server::m_pSocket = nullptr;
-
 Server::Server()
+{
+}
+
+void Server::serverInit()
 {
     if (!this->listen(QHostAddress::LocalHost, 2323))
     {
@@ -22,9 +24,9 @@ void Server::incomingConnection(qintptr socketDescriptor)
     m_pSocket->setSocketDescriptor(socketDescriptor);
     connect (m_pSocket, &QTcpSocket::readyRead, this, &Server::slotReadyRead);
     connect (m_pSocket, &QTcpSocket::disconnected, m_pSocket, &QTcpSocket::deleteLater);
-    //SocketName socketName;
-    //socketName.pSocket = m_pSocket;
-    //m_pSocketVector.push_back(socketName);
+    SocketName socketName;
+    socketName.pSocket = m_pSocket;
+    m_pSocketVector.push_back(socketName);
     qDebug()<<""<<socketDescriptor;
 }
 
@@ -77,6 +79,8 @@ void Server::slotReadyRead()
         qDebug()<<"Datastream Error!";
     }
 }
+
+Server* MyServer::pServer = new Server;
 
 
 

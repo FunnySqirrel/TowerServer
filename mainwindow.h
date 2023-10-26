@@ -59,7 +59,6 @@ private:
     void mouseReleaseEvent(QMouseEvent *event);
     void ChangeButtonStatus(int Num);
     QPoint z;
-
-    Server* m_pServer;
+    static Server* m_pServer;
 };
 #endif // MAINWINDOW_H

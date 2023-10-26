@@ -1,8 +1,10 @@
 #include "server.h"
 
+QTcpSocket* Server::m_pSocket = nullptr;
+
 Server::Server()
 {
-    if (!this->listen(QHostAddress::Any, 2323))
+    if (!this->listen(QHostAddress::LocalHost, 2323))
     {
         qDebug()<<"Error! Server not started!";
         return;
@@ -12,7 +14,6 @@ Server::Server()
 
 void Server::SendToClient()
 {
-
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
@@ -21,7 +22,9 @@ void Server::incomingConnection(qintptr socketDescriptor)
     m_pSocket->setSocketDescriptor(socketDescriptor);
     connect (m_pSocket, &QTcpSocket::readyRead, this, &Server::slotReadyRead);
     connect (m_pSocket, &QTcpSocket::disconnected, m_pSocket, &QTcpSocket::deleteLater);
-    m_pSocketVector.push_back(m_pSocket);
+    //SocketName socketName;
+    //socketName.pSocket = m_pSocket;
+    //m_pSocketVector.push_back(socketName);
     qDebug()<<""<<socketDescriptor;
 }
 
@@ -49,11 +52,18 @@ void Server::slotReadyRead()
                 break;
             }
             in>>msgType;
+            QVariantList data;
+            in>>data;
             switch(msgType)
             {
             case e_MsgType::text:
                 break;
             case e_MsgType::loginRequest:
+            {
+                QString login = data[0].toString();
+                QString password = data[1].toString();
+                qDebug()<<""<<login<<" "<<password;
+            }
                 break;
             case e_MsgType::logoutRequest:
                 break;
@@ -67,3 +77,6 @@ void Server::slotReadyRead()
         qDebug()<<"Datastream Error!";
     }
 }
+
+
+

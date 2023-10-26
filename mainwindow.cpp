@@ -4,6 +4,7 @@
 #include "ui_mainwindow.h"
 #include "mystyleui.h"
 #include "dbmanager.h"
+
 //#include "paintcelldelegate.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -49,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     else ui->statusbar->showMessage("При подключении к базе данных произошла ошибка: " + UserCards.lastError().databaseText());
 
     //создаем сервер
-
+    m_pServer = new Server;
 }
 
 MainWindow::~MainWindow()

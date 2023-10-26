@@ -11,7 +11,10 @@
 #include <QMouseEvent>
 //#include <QTableView>
 
+
 //#include <qdynamicbutton.h>
+
+#include "server.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -56,5 +59,7 @@ private:
     void mouseReleaseEvent(QMouseEvent *event);
     void ChangeButtonStatus(int Num);
     QPoint z;
+
+    Server* m_pServer;
 };
 #endif // MAINWINDOW_H

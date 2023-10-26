@@ -11,16 +11,18 @@ class Server : public QTcpServer
 
 public:
     Server();
-    QTcpSocket *m_pSocket;
 
-private:
+    static QTcpSocket* m_pSocket;
+
     struct SocketName
     {
-        QTcpSocket socket;
-        QString name;
+        QTcpSocket* pSocket;
+        QString name = "guest";
     };
-    QVector<QTcpSocket*> m_pSocketVector;       //текущий сокет
-    QByteArray m_Data;                          //данные
+
+private:
+
+    QVector<SocketName> m_pSocketVector;       //текущий сокет
     enum class e_MsgType                        //тип сообщения и команды
     {
         text =0,
@@ -32,6 +34,7 @@ private:
     void SendToClient();                        //функция отправки данных клиенту
 
 public slots:
+
     void incomingConnection(qintptr socketDescriptor);      //слот на установку соединения
     void slotReadyRead();                                   //слот на прочтение данных
 };

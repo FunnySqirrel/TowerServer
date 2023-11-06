@@ -2,16 +2,18 @@
 #ifndef EVENTCARD_H
 #define EVENTCARD_H
 
-#include "mystyleui.h"
-
 #include <QWidget>
-#include <QLineEdit>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QPushButton>
-#include <QMouseEvent>
-#include <QLabel>
 
+class QDialogButtonBox;
+class QComboBox;
+class QGraphicsDropShadowEffect;
+class CalendarPage;
+class QHBoxLayout;
+class QVBoxLayout;
+class QTextEdit;
+class QPushButton;
+class QLineEdit;
+class QLabel;
 
 class EventCard : public QWidget
 {
@@ -23,8 +25,9 @@ protected:
     virtual QSize sizeHint() const;
 
 public:
-    explicit EventCard(QWidget *parent = nullptr);
-    QLabel *lNameEvent;
+    explicit EventCard(CalendarPage *pcp = nullptr, QWidget *parent = nullptr);
+    virtual ~EventCard();
+    //QLabel *lNameEvent;
     QLineEdit *leNameEvent;
 
     QLabel *lTimeEvent;
@@ -47,20 +50,39 @@ public:
 
     QPoint DragStartPosition;
     QPoint z;
-    bool IsMoving = false;
     static int ResID;          // Статическая переменная, счетчик номеров виджетов
-    //int getID();               // Функция для возврата локального номера кнопки
+    int getID();               // Функция для возврата локального номера кнопки
 
 private:
-    int EventID = 0;          // Локальная переменная, id виджета
+    //Переменные
     QString Names;
+    QPushButton *Del;
+    CalendarPage *ParentCalendarPage;
+    QGraphicsDropShadowEffect *shadow_effect;
+    QDialog *Registration;
+    QVBoxLayout *VDialogLayout;
+    QHBoxLayout *HDialogLayout;
+    QLabel *lName;
+    QLineEdit *ldName;
+    QComboBox *ComBox;
+    QDialogButtonBox *DBB;
+    QPalette *palette;
+    int EventID = 0;           // Локальная переменная, id виджета
     int nCount = 0;
+    int buffPos;
+    int PreviousPos;
+    //Функции (методы)
+    int GetXCoord(QPoint WidgetPosition);
+    int GetYCoord(QPoint WidgetPosition);
+    inline int IndexCell(QPoint WidgetPosition);
+    void SFHovered(QPoint WidgetPosition);
 
 signals:
 
 private slots:
     void on_bSignUpClicked();
     void on_leNumberOfSeatsTextChanged();
+    void onDelButtonClicked();
 
     // QWidget interface
 protected:

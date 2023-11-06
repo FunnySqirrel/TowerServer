@@ -2,12 +2,17 @@
 #ifndef CALENDARPAGE_H
 #define CALENDARPAGE_H
 
-#include "eventcard.h"
-
 #include <QDate>
-#include <QScrollArea>
 #include <QWidget>
 
+class MyStyleUI;
+class EventCard;
+class QFrame;
+class QGridLayout;
+class QLabel;
+class QPushButton;
+class QScrollArea;
+class QVBoxLayout;
 
 class CalendarPage : public QWidget
 {
@@ -19,27 +24,27 @@ public:
     QLabel *lDayOfTheWeek[7];
     QDate Date[7];
     QPushButton *AddButton;
-    EventCard *Card;
+    QVector <EventCard*> Card;
     QScrollArea *ScrollArea;
     QGridLayout *GridLayout;
+    QVector <QPushButton*> DarkButton;
+    QWidget *mw;
 
 signals:
 
 private slots:
-    void onAddButtonClicked();
+    void onDarkButtonClicked();
 
 private:
     QString sDayOfTheWeek[7] {"Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресение"};
-    QWidget *ShadowField[7];
-    QHBoxLayout *HBox[7];
-    QVBoxLayout *mwl;
+    QPoint dragStartPosition;
+    int nPosGrid; //Индекс отвечающий за
+    int ind;
 
     void SetDate(QDate PDate);
-    void Init(MyStyleUI Style1);
+    void Init();
 
 protected:
-    virtual void resizeEvent(QResizeEvent *event) override;
-
     // QObject interface
     virtual void timerEvent(QTimerEvent *event) override;
 };

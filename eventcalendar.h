@@ -2,15 +2,12 @@
 #ifndef EVENTCALENDAR_H
 #define EVENTCALENDAR_H
 
-
 #include "calendarpage.h"
 #include "eventcard.h"
 #include "calendarpage.h"
 
-
 #include <QScrollArea>
 #include <QStackedWidget>
-
 
 class QLabel;
 

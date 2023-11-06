@@ -1,5 +1,10 @@
 
 #include "eventcalendar.h"
+#include "mystyleui.h"
+
+#include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 EventCalendar::EventCalendar(QWidget *parent)
     : QWidget{parent}
@@ -7,9 +12,14 @@ EventCalendar::EventCalendar(QWidget *parent)
     ButtonBack = new QPushButton(this);
     ButtonBack->setText("<<<");
     ButtonBack->setEnabled(false);
+    ButtonBack->setStyleSheet(MyStyleUI::GetButtonBackStyle());
+    ButtonBack->setIconSize(QSize(50, 50));
+    ButtonBack->setMaximumHeight(55);
 
     ButtonForward = new QPushButton(this);
-    ButtonForward->setText(">>>");
+    ButtonForward->setStyleSheet(MyStyleUI::GetButtonForwardStyle());
+    ButtonForward->setIconSize(QSize(100, 100));
+    ButtonForward->setMaximumHeight(55);
 
     connect(ButtonBack, SIGNAL(clicked()), this, SLOT(onButtonBackClicked()));
     connect(ButtonForward, SIGNAL(clicked()), this, SLOT(onButtonForwardClicked()));
@@ -27,6 +37,8 @@ EventCalendar::EventCalendar(QWidget *parent)
     lCalendar->setAlignment(Qt::AlignCenter);
 
     VLayout = new QVBoxLayout(this);
+    VLayout->setContentsMargins(0, 0, 0, 0);
+    VLayout->setSpacing(0);
     HLayout = new QHBoxLayout(this);
 
     VLayout->addLayout(HLayout);
@@ -36,6 +48,7 @@ EventCalendar::EventCalendar(QWidget *parent)
 
     VLayout->addWidget(StackedWidget);
     setLayout(VLayout);
+    setContentsMargins(0, 0, 0, 0);
 }
 
 void EventCalendar::onButtonBackClicked()
@@ -101,4 +114,3 @@ void EventCalendar::lCalendarDate(int Pg)
 
     else lCalendar->setText(DateToString(Page[Pg]->Date[0].month()) + Page[Pg]->Date[0].toString(" d") + " - " + DateToString(Page[Pg]->Date[6].month()) + Page[Pg]->Date[6].toString(" d"));
 }
-

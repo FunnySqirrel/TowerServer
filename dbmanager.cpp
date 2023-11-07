@@ -2,6 +2,8 @@
 
 QSqlDatabase DBManager::db =  QSqlDatabase::database();
 
+MainWindow *DBManager::m_pOwner = nullptr;
+
 DBManager::DBManager()
 {
 
@@ -86,12 +88,15 @@ bool DBManager::add_user(QString name, QString birthDate, int balance, bool isAc
 
     if(query.exec())
     {
+        m_pOwner->updateUsers();
         return true;
     }
     else
     {
         return false;
     }
+
+
 }
 
 bool DBManager::edit_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password, int id)
@@ -124,3 +129,11 @@ bool DBManager::edit_user(QString name, QString birthDate, int balance, bool isA
         return false;
     }
 }
+
+void DBManager::setOwner(MainWindow *owner)
+{
+    m_pOwner = owner;
+}
+
+void DBManager::updateTable()
+{}

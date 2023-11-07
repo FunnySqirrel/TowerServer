@@ -1,4 +1,5 @@
 #include "server.h"
+#include "dbmanager.h"
 
 Server::Server()
 {
@@ -68,6 +69,16 @@ void Server::slotReadyRead()
             }
                 break;
             case e_MsgType::logoutRequest:
+                break;
+            case e_MsgType::registrationRequest:
+            {
+                QString name = data[0].toString();
+                QString birthDate = data[1].toString();
+                QString login = data[2].toString();
+                QString password = data[3].toString();
+                qDebug()<<name<<" "<<birthDate<<" "<<login<<" "<<password;
+                DBManager::add_user(name, birthDate, 0,true, login, password);
+            }
                 break;
             default:
                 break;

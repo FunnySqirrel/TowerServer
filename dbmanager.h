@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 #include <QFile>
 #include <QDebug>
+#include "mainwindow.h"
 
 #define DATABASE_NAME           "TowerOfMage.db"
 
@@ -41,6 +42,7 @@ class DBManager
 {
 private:
     static QSqlDatabase db;
+    static MainWindow *m_pOwner;
 public:
     DBManager();
 
@@ -63,6 +65,9 @@ public:
     static void get_user();
     static void gelt_user_list();
     static QStringList get_user_field(QStringList fields);
+
+    static void setOwner(MainWindow *owner);
+    static void updateTable();
 };
 
 #endif // DBMANAGER_H

@@ -44,12 +44,13 @@ MainWindow::MainWindow(QWidget *parent)
 
         ui->tabWidget->tabBar()->hide(); //Скрыть названия вкладок
 
-        // Функция сортировки
-        //ui->tableView->setSortingEnabled(true);
+        //Функция сортировки
+        ui->tableView->setSortingEnabled(true);
     }
     else ui->statusbar->showMessage("При подключении к базе данных произошла ошибка: " + UserCards.lastError().databaseText());
     MyServer::pServer->serverInit();
 
+    DBManager::setOwner(this);
 }
 
 MainWindow::~MainWindow()
@@ -172,6 +173,11 @@ void MainWindow::ChangeButtonStatus(int Num)
         ui->UsersButton->setStyleSheet(MyStyleUI::GetLeftButtonStyle());
         ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
     }
+}
+
+void MainWindow::updateUsers()
+{
+    UserCardsModel->select();
 }
 
 void MainWindow::on_UsersButton_clicked()

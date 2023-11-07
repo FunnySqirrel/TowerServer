@@ -60,5 +60,7 @@ private:
     void ChangeButtonStatus(int Num);
     QPoint z;
     static Server* m_pServer;
+public:
+    void updateUsers();
 };
 #endif // MAINWINDOW_H

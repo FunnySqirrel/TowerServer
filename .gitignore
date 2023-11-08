@@ -71,3 +71,5 @@ Thumbs.db
 *.dll
 *.exe
 
+/TowerServer.pro.user.11b470f
+/*.qtds

@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>Resources/Close.png</file>
+        <file>Resources/Maximize.png</file>
+        <file>Resources/Minimize.png</file>
+        <file>Resources/Normal.png</file>
+        <file>Resources/Delete.png</file>
+        <file>Resources/Add.png</file>
+        <file>Resources/Sidebar.png</file>
+        <file>Resources/ButtonIcon.png</file>
+        <file>Resources/Arrow.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file>Resources/Fonts/ARIALUNI.TTF</file>
+    </qresource>
+</RCC>

@@ -5,6 +5,9 @@
 #include "mystyleui.h"
 #include "dbmanager.h"
 
+
+#include "eventcalendar.h"
+
 //#include "paintcelldelegate.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -47,10 +50,13 @@ MainWindow::MainWindow(QWidget *parent)
         //Функция сортировки
         ui->tableView->setSortingEnabled(true);
     }
+
     else ui->statusbar->showMessage("При подключении к базе данных произошла ошибка: " + UserCards.lastError().databaseText());
     MyServer::pServer->serverInit();
 
     DBManager::setOwner(this);
+    Calendar = new EventCalendar();
+    ui->tabWidget->addTab(Calendar, "Календарь");
 }
 
 MainWindow::~MainWindow()
@@ -103,18 +109,23 @@ void MainWindow::SetInterfaceStyle()
 {
     ui->CloseButton->setToolTip (tr ("Закрыть"));
     ui->CloseButton->setStyleSheet(MyStyleUI::GetCloseButtonsStyle());
+    ui->CloseButton->setIconSize(QSize(20, 20));
 
     ui->Maximized_NormalButton->setToolTip (tr ("Развернуть"));
     ui->Maximized_NormalButton->setStyleSheet(MyStyleUI::GetMaximized_NormalButtonsStyle());
+    ui->Maximized_NormalButton->setIconSize(QSize(20, 20));
 
     ui->MinimizedButton->setToolTip (tr ("Свернуть"));
     ui->MinimizedButton->setStyleSheet(MyStyleUI::GetMinimizedButtonStyle());
+    ui->MinimizedButton->setIconSize(QSize(20, 20));
 
     ui->DelButton->setToolTip (tr ("Удалить"));
     ui->DelButton->setStyleSheet(MyStyleUI::GetDelButtonStyle());
+    ui->DelButton->setIconSize(QSize(30, 30));
 
     ui->AddButton->setToolTip (tr ("Добавить"));
     ui->AddButton->setStyleSheet(MyStyleUI::GetAddButtonStyle());
+    ui->AddButton->setIconSize(QSize(30, 30));
 
     ui->UsersButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
     ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftButtonStyle());
@@ -183,11 +194,13 @@ void MainWindow::updateUsers()
 void MainWindow::on_UsersButton_clicked()
 {
     ChangeButtonStatus(1);
+    ui->tabWidget->setCurrentIndex(0);
 }
 
 
 void MainWindow::on_IventsButton_clicked()
 {
     ChangeButtonStatus(2);
+    ui->tabWidget->setCurrentIndex(1);
 }
 

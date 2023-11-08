@@ -10,6 +10,9 @@ CONFIG += c++11
 
 SOURCES += \
     dbmanager.cpp \
+    calendarpage.cpp \
+    eventcalendar.cpp \
+    eventcard.cpp \
     main.cpp \
     mainwindow.cpp \
     mystyleui.cpp \
@@ -19,7 +22,10 @@ HEADERS += \
     dbmanager.h \
     mainwindow.h \
     mystyleui.h \
-    server.h
+    server.h\
+    calendarpage.h \
+    eventcalendar.h \
+    eventcard.h \
 
 FORMS += \
     mainwindow.ui
@@ -28,3 +34,6 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    TowerServerResource.qrc

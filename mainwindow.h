@@ -17,6 +17,8 @@
 #include "server.h"
 
 QT_BEGIN_NAMESPACE
+
+class EventCalendar;
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
@@ -51,6 +53,7 @@ private:
     QSqlDatabase UserCards;
     QSqlTableModel *UserCardsModel;
     QSqlQuery *Query;
+    EventCalendar *Calendar;
     int CurrentRow;
     bool mMoving;
     void SetInterfaceStyle();
@@ -61,6 +64,5 @@ private:
     QPoint z;
     static Server* m_pServer;
 public:
-    void updateUsers();
-};
+    void updateUsers();};
 #endif // MAINWINDOW_H

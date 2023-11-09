@@ -33,8 +33,8 @@ EventCalendar::EventCalendar(QWidget *parent)
 
     lCalendar = new QLabel(this);
     lCalendarDate(0);
-    lCalendar->setFont(QFont("ARIALUNI", 12));
     lCalendar->setAlignment(Qt::AlignCenter);
+    lCalendar->setStyleSheet(MyStyleUI::GetlCalendarStyle());
 
     VLayout = new QVBoxLayout(this);
     VLayout->setContentsMargins(0, 0, 0, 0);

@@ -27,6 +27,7 @@ public:
     static QString GetDarkButtonHoverStyle();
     static QString GetButtonBackStyle();
     static QString GetButtonForwardStyle();
+    static QString GetlCalendarStyle();
 };
 
 #endif // MYSTYLEUI_H

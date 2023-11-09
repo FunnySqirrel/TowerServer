@@ -235,7 +235,7 @@ QString MyStyleUI::GetQlineStyle()
 {
     return "QLineEdit"
            "{"
-           "Color: #5969BC;"
+           "Color: #4269A6;"
            //"font-family: ARIALUNI;"
            //"font-size: 13px;"
            "border: 1px solid rgb(155, 195, 255);"
@@ -260,6 +260,7 @@ QString MyStyleUI::GetQLabelCurrentPageStyle()
            "{"
            "background-color: #4269A6;"
            //"background-color: #355AA8;"
+           "color: #E2EDFF;"
            "}";
 }
 
@@ -268,6 +269,7 @@ QString MyStyleUI::GetQLabelPageStyle()
     return "QLabel"
            "{"
            "background-color: rgb(203, 223, 255);"
+           "color: #4269A6;"
            "}";
 }
 
@@ -322,8 +324,8 @@ QString MyStyleUI::GetButtonForwardStyle()
     return "QPushButton"
            "{"
            "background-color: #4269A6;"
-           "border: outset;"
-           "border-width: 2px;"
+           //"border: outset;"
+           //"border-width: 2px;"
            "icon: url(:/images/Resources/Arrow.png)"
            "}"
            "QPushButton::hover"
@@ -333,7 +335,18 @@ QString MyStyleUI::GetButtonForwardStyle()
         "QPushButton::pressed"
         "{"
            "background-color: #C9EDFF;"
-        "}";
+           "}";
+}
+
+QString MyStyleUI::GetlCalendarStyle()
+{
+    return "QLabel"
+           "{"
+           "background-color: #4269A6;"
+           "font-family: ARIALUNI;"
+           "font-size: 18px;"
+           "color: #E2EDFF"
+           "}";
 }
 
 

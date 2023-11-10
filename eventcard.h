@@ -25,7 +25,7 @@ protected:
     virtual QSize sizeHint() const;
 
 public:
-    explicit EventCard(CalendarPage *pcp = nullptr, QWidget *parent = nullptr);
+    explicit EventCard(CalendarPage *ParentCalendarPage = nullptr, QWidget *parent = nullptr);
     virtual ~EventCard();
     //QLabel *lNameEvent;
     QLineEdit *leNameEvent;
@@ -55,9 +55,9 @@ public:
 
 private:
     //Переменные
+    CalendarPage *PCalendarPage;
     QString Names;
     QPushButton *Del;
-    CalendarPage *ParentCalendarPage;
     QGraphicsDropShadowEffect *shadow_effect;
     QDialog *Registration;
     QVBoxLayout *VDialogLayout;
@@ -71,9 +71,8 @@ private:
     int nCount = 0;
     int buffPos;
     int PreviousPos;
+
     //Функции (методы)
-    int GetXCoord(QPoint WidgetPosition);
-    int GetYCoord(QPoint WidgetPosition);
     inline int IndexCell(QPoint WidgetPosition);
     void SFHovered(QPoint WidgetPosition);
 

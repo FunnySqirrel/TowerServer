@@ -30,6 +30,10 @@ public:
     QVector <QPushButton*> DarkButton;
     QWidget *mw;
 
+    int GetXCoord(QPoint WidgetPosition);
+    int GetYCoord(QPoint WidgetPosition);
+    inline int IndexCell(QPoint WidgetPosition);
+
 signals:
 
 private slots:

@@ -78,10 +78,39 @@ CalendarPage::CalendarPage(QDate PgDate, QWidget *parent)
     setLayout(vb);
 }
 
+/*Функция переводит координаты курсора в координаты сетки
+Если курсор заходит на заголовок, то возвращаем -1
+Если курсор попадает в остальную часть возвращаем индекс поля подсветки*/
+int CalendarPage::GetXCoord(QPoint WidgetPosition)
+{
+    int WidthHeader = lDayOfTheWeek[0]->width() + GridLayout->horizontalSpacing() + ScrollArea->contentsMargins().left();
+    int FieldWidth = mw->width() - WidthHeader;
+    int CellWidth = FieldWidth / (GridLayout->columnCount() - 1);
+    if(WidthHeader > WidgetPosition.x()) return -1;
+    else if(mw->width() - 10 < WidgetPosition.x()) return GridLayout->columnCount() - 2;
+    else return ((WidgetPosition.x() - WidthHeader)/ CellWidth);
+}
+
+int CalendarPage::GetYCoord(QPoint WidgetPosition)
+{
+    if(WidgetPosition.y() / lDayOfTheWeek[0]->height() < GridLayout->rowCount()) return WidgetPosition.y() / lDayOfTheWeek[0]->height();
+    else return GridLayout->rowCount() - 1;
+}
+
+int CalendarPage::IndexCell(QPoint WidgetPosition)
+{
+    if(GetXCoord(WidgetPosition) != -1) return 5 * GetYCoord(WidgetPosition) + GetXCoord(WidgetPosition);
+}
+
 void CalendarPage::onDarkButtonClicked()
 {
     Card.append(new EventCard(this, this));
     Card.last()->setMaximumWidth(200);
+
+    //Определяем объект, который вызвал сигнал, И на его месте создаем карточку
+    QPushButton *temp = qobject_cast<QPushButton*> (sender());
+    GridLayout->addWidget(Card.last(), GetYCoord(temp->geometry().center()), GetXCoord(temp->geometry().center()) + 1);
+    temp->hide();
 
     //  0  1  2  3  4
     //  5  6  7  8  9
@@ -90,17 +119,6 @@ void CalendarPage::onDarkButtonClicked()
     // 20 21 22 23 24
     // 25 26 27 28 29
     // 30 31 32 33 34
-
-    //Определяем объект, который вызвал сигнал, И на его месте создаем карточку
-    for (int i = 0; i < DarkButton.size(); ++i) {
-        if(DarkButton[i] == (QPushButton*) sender()) {
-            //qDebug() << "Номер строки: " << i/5;
-            //qDebug() << "Номер столбца: " << i%5+1;
-            GridLayout->addWidget(Card.last(), i/5, i%5+1);
-            DarkButton[i]->hide();
-            break;
-        }
-    }
 }
 
 void CalendarPage::SetDate(QDate PDate)

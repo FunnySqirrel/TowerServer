@@ -21,7 +21,7 @@ void CalendarPage::Init()
     {
         lDayOfTheWeek[i] = new QLabel(this);                                                             //Выделение памяти под лейбл
         if(Date[i] != QDate::currentDate()) lDayOfTheWeek[i]->setStyleSheet(MyStyleUI::GetQLabelPageStyle()); //
-        else lDayOfTheWeek[i]->setStyleSheet(MyStyleUI::GetQLabelCurrentPageStyle());
+        else lDayOfTheWeek[i]->setStyleSheet(MyStyleUI::GetQLabelCurrentDatePageStyle());
         lDayOfTheWeek[i]->setMinimumSize(140, 120);                                                      //Присваивание минимального размера виджету
         lDayOfTheWeek[i]->setMaximumWidth(140);                                                          //Присваивание максимальной ширины
         QString Format1 = "<html><head/><body><p align=center><span style=" "font-size:16pt; color:#5969bc;>";
@@ -90,15 +90,15 @@ void CalendarPage::onDarkButtonClicked()
     // 20 21 22 23 24
     // 25 26 27 28 29
     // 30 31 32 33 34
-    qDebug() << Card.last()->leNameEvent->width();
 
     //Определяем объект, который вызвал сигнал, И на его месте создаем карточку
     for (int i = 0; i < DarkButton.size(); ++i) {
         if(DarkButton[i] == (QPushButton*) sender()) {
             //qDebug() << "Номер строки: " << i/5;
             //qDebug() << "Номер столбца: " << i%5+1;
-            GridLayout->addWidget(Card.last(), i/5, i%5+1); //DarkButton[i]->geometry().center();
+            GridLayout->addWidget(Card.last(), i/5, i%5+1);
             DarkButton[i]->hide();
+            break;
         }
     }
 }
@@ -151,8 +151,4 @@ void CalendarPage::SetDate(QDate PDate)
     default:
         break;
     }
-}
-
-void CalendarPage::timerEvent(QTimerEvent *event)
-{
 }

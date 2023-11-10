@@ -44,9 +44,6 @@ private:
     void SetDate(QDate PDate);
     void Init();
 
-protected:
-    // QObject interface
-    virtual void timerEvent(QTimerEvent *event) override;
 };
 
 #endif // CALENDARPAGE_H

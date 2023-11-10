@@ -21,7 +21,7 @@ public:
     static QString GetNameProgStyle();
     static QString GetQlineStyle();
     static QString GetQLabelCardStyle();
-    static QString GetQLabelCurrentPageStyle();
+    static QString GetQLabelCurrentDatePageStyle();
     static QString GetQLabelPageStyle();
     static QString GetDarkButtonTransparentStyle();
     static QString GetDarkButtonHoverStyle();

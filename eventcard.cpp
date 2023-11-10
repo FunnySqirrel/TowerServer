@@ -360,6 +360,7 @@ void EventCard::mousePressEvent(QMouseEvent *event)
         PreviousPos = IndexCell(geometry().center());
         buffPos = IndexCell(geometry().center());
     }
+
     //qDebug() << "Координата виджета " << event->pos();
     //qDebug() << "Позиция Card " << this->pos();
     //qDebug() << "Размер карточки: " << this->size();
@@ -370,8 +371,8 @@ void EventCard::mousePressEvent(QMouseEvent *event)
     //qDebug() << "Глобальная позиция " << event->globalPosition();
     //qDebug() << "Размер основного виджета: " << ParentCalendarPage->mw->height();
     //qDebug() << PreviousPos;
-    //qDebug() << "у координата: " << (GetXCoord(ParentCalendarPage->ShadowField[PreviousPos]->geometry().center()));
-    //qDebug() << "x координата: " << (GetYCoord(ParentCalendarPage->ShadowField[PreviousPos]->geometry().center()));
+    qDebug() << "у координата: " << (GetXCoord(ParentCalendarPage->DarkButton[PreviousPos]->geometry().center()));
+    qDebug() << "x координата: " << (GetYCoord(ParentCalendarPage->DarkButton[PreviousPos]->geometry().center()));
 }
 
 void EventCard::SFHovered(QPoint WidgetPosition)

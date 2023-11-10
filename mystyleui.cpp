@@ -254,7 +254,7 @@ QString MyStyleUI::GetQLabelCardStyle()
            "}";
 }
 
-QString MyStyleUI::GetQLabelCurrentPageStyle()
+QString MyStyleUI::GetQLabelCurrentDatePageStyle()
 {
     return "QLabel"
            "{"

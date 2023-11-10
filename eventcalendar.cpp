@@ -4,7 +4,10 @@
 
 #include <QLabel>
 #include <QPushButton>
+#include <QStackedWidget>
 #include <QVBoxLayout>
+
+using namespace std::chrono;
 
 EventCalendar::EventCalendar(QWidget *parent)
     : QWidget{parent}
@@ -27,8 +30,8 @@ EventCalendar::EventCalendar(QWidget *parent)
     StackedWidget = new QStackedWidget(this);
 
     for (int i = 0; i < 5; ++i) {
-        Page[i] = new CalendarPage(QDate::currentDate().addDays(i * 7), this);
-        StackedWidget->addWidget(Page[i]);
+        Page.append(new CalendarPage(QDate::currentDate().addDays(i * 7), this));
+        StackedWidget->addWidget(Page.last());
     }
 
     lCalendar = new QLabel(this);
@@ -49,6 +52,8 @@ EventCalendar::EventCalendar(QWidget *parent)
     VLayout->addWidget(StackedWidget);
     setLayout(VLayout);
     setContentsMargins(0, 0, 0, 0);
+
+    startTimer(1h);
 }
 
 void EventCalendar::onButtonBackClicked()
@@ -70,7 +75,6 @@ void EventCalendar::onButtonForwardClicked()
     }
     else {
         ButtonForward->setEnabled(false);
-
     }
 }
 
@@ -108,9 +112,28 @@ QString EventCalendar::DateToString(int Month)
 
 void EventCalendar::lCalendarDate(int Pg)
 {
-    //Pg += 1;
     if(Page[Pg]->Date[0].month() == Page[Pg]->Date[6].month())
         lCalendar->setText(DateToString(Page[Pg]->Date[0].month()) + Page[Pg]->Date[0].toString(" d") + " - " + Page[Pg]->Date[6].toString("d"));
 
     else lCalendar->setText(DateToString(Page[Pg]->Date[0].month()) + Page[Pg]->Date[0].toString(" d") + " - " + DateToString(Page[Pg]->Date[6].month()) + Page[Pg]->Date[6].toString(" d"));
+}
+
+//Не протестированно
+void EventCalendar::timerEvent(QTimerEvent *event)
+{
+    for (int i = 0; i < 7; ++i) {
+        if(i > 0 && Page[0]->Date[i] == QDate::currentDate()) {
+            Page[0]->lDayOfTheWeek[i - 1]->setStyleSheet(MyStyleUI::GetQLabelPageStyle());
+            Page[0]->lDayOfTheWeek[i]->setStyleSheet(MyStyleUI::GetQLabelCurrentDatePageStyle());
+        }
+        else {
+            Page[1]->lDayOfTheWeek[0]->setStyleSheet(MyStyleUI::GetQLabelPageStyle());
+            StackedWidget->removeWidget(Page[0]);
+            Page.removeFirst();
+            Page.append(new CalendarPage(QDate::currentDate().addDays(4 * 7), this));
+        }
+
+    }
+    Interval.addMSecs(-1 * QTime::currentTime().msec());
+    startTimer(Interval.msec());
 }

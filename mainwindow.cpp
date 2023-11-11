@@ -10,6 +10,8 @@
 
 //#include "paintcelldelegate.h"
 
+Server* MainWindow::m_pServer = new Server;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -52,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
 
     else ui->statusbar->showMessage("При подключении к базе данных произошла ошибка: " + UserCards.lastError().databaseText());
-    MyServer::pServer->serverInit();
+    m_pServer->serverInit();
 
     DBManager::setOwner(this);
     Calendar = new EventCalendar();

@@ -36,7 +36,7 @@ void Server::slotReadyRead()
     m_pSocket = (QTcpSocket*)sender();
     qint16 blocksize=0;
     QDataStream in(m_pSocket);
-    e_MsgType msgType;
+    e_ClientMsgType msgType;
     in.setVersion(QDataStream::Qt_6_6);
     if(in.status() == QDataStream::Ok)
     {
@@ -59,18 +59,18 @@ void Server::slotReadyRead()
             in>>data;
             switch(msgType)
             {
-            case e_MsgType::text:
+            case e_ClientMsgType::text:
                 break;
-            case e_MsgType::loginRequest:
+            case e_ClientMsgType::loginRequest:
             {
                 QString login = data[0].toString();
                 QString password = data[1].toString();
                 qDebug()<<""<<login<<" "<<password;
             }
                 break;
-            case e_MsgType::logoutRequest:
+            case e_ClientMsgType::logoutRequest:
                 break;
-            case e_MsgType::registrationRequest:
+            case e_ClientMsgType::registrationRequest:
             {
                 QString name = data[0].toString();
                 QString birthDate = data[1].toString();
@@ -90,8 +90,6 @@ void Server::slotReadyRead()
         qDebug()<<"Datastream Error!";
     }
 }
-
-Server* MyServer::pServer = new Server;
 
 
 

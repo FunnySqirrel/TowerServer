@@ -259,7 +259,7 @@ int EventCard::getID()
 
 int EventCard::IndexCell(QPoint WidgetPosition)
 {
-    if(PCalendarPage->GetXCoord(WidgetPosition) != -1) return 5 * PCalendarPage->GetYCoord(WidgetPosition) + PCalendarPage->GetXCoord(WidgetPosition);
+    if(PCalendarPage->GetXCoord(WidgetPosition) != -1) return (PCalendarPage->GridLayout->columnCount() - 1) * PCalendarPage->GetYCoord(WidgetPosition) + PCalendarPage->GetXCoord(WidgetPosition);
 }
 
 void EventCard::on_bSignUpClicked()
@@ -341,18 +341,19 @@ void EventCard::mousePressEvent(QMouseEvent *event)
         buffPos = IndexCell(geometry().center());
     }
 
-    //qDebug() << "Координата виджета " << event->pos();
+    //qDebug() << "Координата курсора " << event->pos();
     //qDebug() << "Позиция Card " << this->pos();
     //qDebug() << "Размер карточки: " << this->size();
     //qDebug() << "Индекс элемента в сетке: " << PCalendarPage->GridLayout->indexOf(this);
-    //qDebug() << PCalendarPage->ScrollArea->size();
+    //qDebug() << "Размер ScrollArea " << PCalendarPage->ScrollArea->size();
     //qDebug() << "Локальная позиция " << event->position();
     //qDebug() << "Позиция сцены " << event->scenePosition();
     //qDebug() << "Глобальная позиция " << event->globalPosition();
-    //qDebug() << "Размер основного виджета: " << PCalendarPage->mw->height();
-    //qDebug() << PreviousPos;
-    //qDebug() << "у координата: " << (GetXCoord(PCalendarPage->DarkButton[PreviousPos]->geometry().center()));
-    //qDebug() << "x координата: " << (GetYCoord(PCalendarPage->DarkButton[PreviousPos]->geometry().center()));
+    //qDebug() << "Размер основного виджета: " << PCalendarPage->mw->size();
+    //qDebug() << "Координата карточки " << geometry().center();
+    //qDebug() << IndexCell(geometry().center());
+    //qDebug() << "у координата: " << (PCalendarPage->GetXCoord(geometry().center()));
+    //qDebug() << "x координата: " << (PCalendarPage->GetYCoord(geometry().center()));
 }
 
 void EventCard::SFHovered(QPoint WidgetPosition)
@@ -390,6 +391,9 @@ void EventCard::mouseMoveEvent(QMouseEvent *event)
     }
 
     SFHovered(geometry().center());
+    for (int i = 0; i < PCalendarPage->DarkButton.size(); ++i) {
+        if(PCalendarPage->DarkButton[IndexCell(geometry().center())] == PCalendarPage->DarkButton[i]) qDebug()<<true;
+            }
 
     //int WidthHeader = PCalendarPage->lDayOfTheWeek[0]->width() + PCalendarPage->GridLayout->horizontalSpacing() + PCalendarPage->ScrollArea->contentsMargins().left();
     //int FieldWidth = PCalendarPage->ScrollArea->width() - WidthHeader;
@@ -400,11 +404,12 @@ void EventCard::mouseMoveEvent(QMouseEvent *event)
     //qDebug() << "Ширина ячейки: " << CellWidth;
     //qDebug() << "Координата центра карточки: " << geometry().center().x();
     //qDebug() << "Ширина заголовка: " << WidthHeader; //PCalendarPage->lDayOfTheWeek[0]->width();
-    //qDebug() << IndexCell(geometry().center());
+    qDebug() << IndexCell(geometry().center());
     //qDebug() << PCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
     //qDebug() << PCalendarPage->ScrollArea->geometry().width();
-    //qDebug() << GetXCoord(geometry().center());
     //qDebug() << PCalendarPage->ShadowField[IndexCell(geometry().center())]->geometry().contains(geometry().center());
+    //qDebug() << "у координата: " << (PCalendarPage->GetXCoord(geometry().center()));
+    //qDebug() << "x координата: " << (PCalendarPage->GetYCoord(geometry().center()));
 }
 
 void EventCard::mouseReleaseEvent(QMouseEvent *event)

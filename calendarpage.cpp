@@ -110,20 +110,12 @@ void CalendarPage::onDarkButtonClicked()
     GridLayout->addWidget(Card.last(), GetYCoord(temp->geometry().center()), GetXCoord(temp->geometry().center()) + 1);
     DarkButton[IndexCell(temp->geometry().center())]->hide();
 
-    //  0  1  2  3  4  ->   0  1  2  3  4  5
-    //  5  6  7  8  9  ->   6  7  8  9 10 11
-    // 10 11 12 13 14  ->  12 13 14 15 16 17
-    // 15 16 17 18 19  ->  18 19 20 21 22 23
-    // 20 21 22 23 24  ->  24 25 26 27 28 29
-    // 25 26 27 28 29  ->  30 31 32 33 34 35
-    // 30 31 32 33 34  ->  36 37 38 39 40 41
-
     int c = 0;
     for (int i = 1; i < GridLayout->columnCount(); ++i) {
         if(GridLayout->itemAtPosition(GetYCoord(temp->geometry().center()), i)->widget()->isHidden()) c++;
     }
     if (c == GridLayout->columnCount() - 1) {
-        //Функция создает дополнительную колонку ячеек
+        //Процедура создает дополнительную колонку ячеек если больше нет свободных ячеек в строке
         int col = GridLayout->columnCount();
         int j = 0;
         for (int i = 1; i < 8; i++) {
@@ -136,7 +128,6 @@ void CalendarPage::onDarkButtonClicked()
             ++j;
         }
     }
-
 
     //qDebug() << mw->width();
     //DarkButton.clear();

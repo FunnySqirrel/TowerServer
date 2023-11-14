@@ -345,7 +345,7 @@ background-color: white;</string>
           </property>
           <property name="minimumSize">
            <size>
-            <width>200</width>
+            <width>0</width>
             <height>0</height>
            </size>
           </property>
@@ -356,7 +356,7 @@ background-color: white;</string>
            </size>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: rgb(63, 63, 63);
+           <string notr="true">background-color: rgb(30, 30, 30);
 border: none;
 </string>
           </property>
@@ -381,20 +381,20 @@ border: none;
                 </size>
                </property>
                <property name="text">
-                <string>Пользователи карт</string>
+                <string/>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="IventsButton">
+              <widget class="QPushButton" name="EventsButton">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>40</height>
+                 <height>0</height>
                 </size>
                </property>
                <property name="text">
-                <string>Мероприятия</string>
+                <string/>
                </property>
               </widget>
              </item>

@@ -185,39 +185,37 @@ QString MyStyleUI::GetTableStyle()
             "}";
 }
 
-QString MyStyleUI::GetLeftButtonStyle()
+QString MyStyleUI::GetSideBarButtonStyle(QString iconUrl)
 {
     return "QPushButton"
-            "{"
-                //"background-color: rgb(75, 75, 75);"
-                "border: none;"
-                "border-radius: 12px;"
-                "background: transparent;"
-                "font-family: ARIALUNI;"
-                "font-size: 16px;"
-                "line-height: 1.0;"
-                "color: rgb(200, 200, 200);"
-            "}"
+           "{"
+           "border: none;"
+           "border-radius: 12px;"
+           "background: transparent;"
+           "font-family: ARIALUNI;"
+           "font-size: 16px;"
+           "line-height: 1.0;"
+           "color: rgb(100, 100, 100);"
+           + iconUrl
+           + "}"
 
-            "QPushButton::hover { "
-            "text-decoration: underline;"
-            "}";
+           "QPushButton::hover { "
+           "background-color: #e2edff;"
+           "}";
 }
 
-QString MyStyleUI::GetLeftActiveButtonStyle()
+QString MyStyleUI::GetSideBarButtonActiveStyle(QString iconUrl)
 {
     return "QPushButton"
-            "{"
-                //"background-color: rgb(75, 75, 75);"
-                "color: rgb(200, 200, 200);"
-                "border: none;"
-                "border-radius: 12px;"
-                "background: transparent;"
-                "font-family: ARIALUNI;"
-                "font: bold 16px;"
-                "text-transform: uppercase;"
-                "text-decoration: underline;"
-           "}";
+           "{"
+           "color: #E2EDFF;"
+           "border: none;"
+           "border-radius: 12px;"
+           "background: transparent;"
+           "font-family: ARIALUNI;"
+           "font: 16px;"
+           + iconUrl
+           + "}";
 }
 
 QString MyStyleUI::GetNameProgStyle()
@@ -345,7 +343,7 @@ QString MyStyleUI::GetlCalendarStyle()
            "background-color: #4269A6;"
            "font-family: ARIALUNI;"
            "font-size: 18px;"
-           "color: #E2EDFF"
+           "color: #E2EDFF;"
            "}";
 }
 

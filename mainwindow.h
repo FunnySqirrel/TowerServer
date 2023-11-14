@@ -46,7 +46,7 @@ private slots:
 
     void on_UsersButton_clicked();
 
-    void on_IventsButton_clicked();
+    void on_EventsButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -64,5 +64,8 @@ private:
     QPoint z;
     static Server* m_pServer;
 public:
-    void updateUsers();};
+    void updateUsers();
+    // QObject interface
+    virtual bool eventFilter(QObject *watched, QEvent *event) override;
+};
 #endif // MAINWINDOW_H

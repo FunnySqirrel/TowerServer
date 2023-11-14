@@ -127,12 +127,18 @@ void MainWindow::SetInterfaceStyle()
     ui->AddButton->setStyleSheet(MyStyleUI::GetAddButtonStyle());
     ui->AddButton->setIconSize(QSize(30, 30));
 
-    ui->UsersButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
-    ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftButtonStyle());
+    ui->UsersButton->setStyleSheet(MyStyleUI::GetSideBarButtonActiveStyle("icon: url(:/images/Resources/UsersActive.png)"));
+    ui->UsersButton->setMinimumSize(55, 55);
+    ui->UsersButton->setIconSize(QSize(50, 50));
+    ui->EventsButton->setStyleSheet(MyStyleUI::GetSideBarButtonStyle("icon: url(:/images/Resources/Events.png)"));
+    ui->EventsButton->setMinimumSize(55, 55);
+    ui->EventsButton->setIconSize(QSize(50, 50));
 
     ui->frame->setStyleSheet(MyStyleUI::GetFrameStyle());
     ui->tableView->setStyleSheet(MyStyleUI::GetTableStyle());
     ui->NameProg->setStyleSheet(MyStyleUI::GetNameProgStyle());
+    ui->SidebarFrame->installEventFilter(this);
+    //ui->SidebarFrame->setMinimumWidth(60);
     //ui->tableView->setItemDelegate(new PaintCellDelegate);
 
     // Получить размер главного окна
@@ -176,13 +182,13 @@ void MainWindow::ChangeButtonStatus(int Num)
 {
     if (Num == 1)
     {
-        ui->UsersButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
-        ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftButtonStyle());
+        ui->UsersButton->setStyleSheet(MyStyleUI::GetSideBarButtonActiveStyle("icon: url(:/images/Resources/UsersActive.png)"));
+        ui->EventsButton->setStyleSheet(MyStyleUI::GetSideBarButtonStyle("icon: url(:/images/Resources/Events.png)"));
     }
     else
     {
-        ui->UsersButton->setStyleSheet(MyStyleUI::GetLeftButtonStyle());
-        ui->IventsButton->setStyleSheet(MyStyleUI::GetLeftActiveButtonStyle());
+        ui->UsersButton->setStyleSheet(MyStyleUI::GetSideBarButtonStyle("icon: url(:/images/Resources/Users.png)"));
+        ui->EventsButton->setStyleSheet(MyStyleUI::GetSideBarButtonActiveStyle("icon: url(:/images/Resources/EventsActive.png)"));
     }
 }
 
@@ -197,10 +203,26 @@ void MainWindow::on_UsersButton_clicked()
     ui->tabWidget->setCurrentIndex(0);
 }
 
-
-void MainWindow::on_IventsButton_clicked()
+void MainWindow::on_EventsButton_clicked()
 {
     ChangeButtonStatus(2);
     ui->tabWidget->setCurrentIndex(1);
 }
 
+bool MainWindow::eventFilter(QObject *watched, QEvent *event)
+{
+    if(watched == ui->SidebarFrame && event->type() == QEvent::Enter) {
+        ui->SidebarFrame->setMinimumWidth(220);
+        ui->UsersButton->setText("Пользователи карт");
+        ui->EventsButton->setText("Мероприятия");
+        return true;
+    }
+    else if(watched == ui->SidebarFrame && event->type() == QEvent::Leave) {
+        ui->SidebarFrame->setMinimumWidth(0);
+        ui->UsersButton->setText(NULL);
+        ui->EventsButton->setText(NULL);
+        return true;
+    }
+    else return false;
+    return eventFilter(watched, event);
+}

@@ -16,8 +16,8 @@ public:
     static QString GetDelButtonStyle();
     static QString GetAddButtonStyle();
     static QString GetTableStyle();
-    static QString GetLeftButtonStyle();
-    static QString GetLeftActiveButtonStyle();
+    static QString GetSideBarButtonStyle(QString iconUrl = NULL);
+    static QString GetSideBarButtonActiveStyle(QString iconUrl = NULL);
     static QString GetNameProgStyle();
     static QString GetQlineStyle();
     static QString GetQLabelCardStyle();

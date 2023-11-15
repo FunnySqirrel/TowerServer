@@ -1,5 +1,6 @@
 #include <QFontDatabase>
 #include <QPropertyAnimation>
+#include <QStackedWidget>
 #include <QSqlError>
 #include <QSqlTableModel>
 #include <QSqlQuery>
@@ -58,8 +59,6 @@ MainWindow::MainWindow(QWidget *parent)
     MyServer::pServer->serverInit();
 
     DBManager::setOwner(this);
-    Calendar = new EventCalendar();
-    ui->tabWidget->addTab(Calendar, "Календарь");
 }
 
 MainWindow::~MainWindow()
@@ -107,15 +106,7 @@ void MainWindow::on_Maximized_NormalButton_clicked()
     isMaximized() ? ui->Maximized_NormalButton->setToolTip (tr ("Свернуть в окно")) : ui->Maximized_NormalButton->setToolTip (tr ("Развернуть"));
 }
 
-QVariant MainWindow::StringInterpolator(const QString &start, const QString &end, qreal progress)
-{
-    if(progress < 1.0)
-        return start;
-    else
-        return end;
-}
-
-//Реализация собственного пользовательского интерфейса
+//Реализация анимации сайдбара
 void MainWindow::fSideBarAnim(int duration, int startValue, int endValue)
 {
     SideBarAnim = new QPropertyAnimation(ui->Sidebar, "minimumWidth", ui->Sidebar);
@@ -185,6 +176,38 @@ void MainWindow::SetInterfaceStyle()
     ui->NameProg->setStyleSheet(MyStyleUI::GetNameProgStyle());
     ui->Sidebar->installEventFilter(this);
 
+    Calendar = new EventCalendar();
+    ui->tabWidget->addTab(Calendar, "Календарь");
+
+    //Кнопка возврата на предыдущую страницу
+    ButtonBack = new QPushButton(this);
+    ButtonBack->setEnabled(false);
+    ButtonBack->setStyleSheet(MyStyleUI::GetButtonBackStyle());
+    ButtonBack->setIconSize(QSize(50, 50));
+    ButtonBack->setMinimumSize(100, 30); //ui->horizontalLayout_5->geometry().height())
+    ui->horizontalLayout_5->insertWidget(4, ButtonBack);
+    ButtonBack->hide();
+
+    //Показывает числа текущей недели
+    lCalendar = new QLabel(this);
+    lCalendarDate(0);
+    lCalendar->setAlignment(Qt::AlignCenter);
+    lCalendar->setStyleSheet(MyStyleUI::GetlCalendarStyle());
+    lCalendar->setMinimumWidth(250);
+    ui->horizontalLayout_5->insertWidget(5, lCalendar);
+    lCalendar->hide();
+
+    //Кнопка перехода на следующую страницу
+    ButtonForward = new QPushButton(this);
+    ButtonForward->setStyleSheet(MyStyleUI::GetButtonForwardStyle());
+    ButtonForward->setIconSize(QSize(50, 50));
+    ButtonForward->setMinimumSize(100, 30);
+    ui->horizontalLayout_5->insertWidget(6, ButtonForward);
+    ButtonForward->hide();
+
+    connect(ButtonBack, SIGNAL(clicked()), this, SLOT(onButtonBackClicked()));
+    connect(ButtonForward, SIGNAL(clicked()), this, SLOT(onButtonForwardClicked()));
+
     //ui->tableView->setItemDelegate(new PaintCellDelegate);
 
 }
@@ -242,12 +265,22 @@ void MainWindow::on_UsersButton_clicked()
 {
     ChangeButtonStatus(1);
     ui->tabWidget->setCurrentIndex(0);
+    ui->AddButton->show();
+    ui->DelButton->show();
+    ButtonBack->hide();
+    lCalendar->hide();
+    ButtonForward->hide();
 }
 
 void MainWindow::on_EventsButton_clicked()
 {
     ChangeButtonStatus(2);
     ui->tabWidget->setCurrentIndex(1);
+    ui->AddButton->hide();
+    ui->DelButton->hide();
+    ButtonBack->show();
+    lCalendar->show();
+    ButtonForward->show();
 }
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
@@ -266,4 +299,36 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
     }
     else return false;
     return eventFilter(watched, event);
+}
+
+void MainWindow::onButtonBackClicked()
+{
+    if(Calendar->StackedWidget->currentIndex() > 0) {
+        Calendar->StackedWidget->setCurrentIndex(Calendar->StackedWidget->currentIndex() - 1);
+        lCalendarDate(Calendar->StackedWidget->currentIndex());
+        ButtonForward->setEnabled(true);
+    }
+    else ButtonBack->setEnabled(false);
+}
+
+void MainWindow::onButtonForwardClicked()
+{
+    if(Calendar->StackedWidget->currentIndex() < 4) {
+        Calendar->StackedWidget->setCurrentIndex(Calendar->StackedWidget->currentIndex() + 1);
+        lCalendarDate(Calendar->StackedWidget->currentIndex());
+        ButtonBack->setEnabled(true);
+    }
+    else {
+        ButtonForward->setEnabled(false);
+    }
+}
+
+void MainWindow::lCalendarDate(int Pg)
+{
+    if(Calendar->Page[Pg]->Date[0].month() == Calendar->Page[Pg]->Date[6].month())
+        lCalendar->setText(Calendar->DateToString(Calendar->Page[Pg]->Date[0].month()) + Calendar->Page[Pg]->Date[0].toString(" d") + " - " +
+                           Calendar->Page[Pg]->Date[6].toString("d"));
+
+    else lCalendar->setText(Calendar->DateToString(Calendar->Page[Pg]->Date[0].month()) + Calendar->Page[Pg]->Date[0].toString(" d") + " - " +
+                           Calendar->DateToString(Calendar->Page[Pg]->Date[6].month()) + Calendar->Page[Pg]->Date[6].toString(" d"));
 }

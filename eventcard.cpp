@@ -333,13 +333,13 @@ void EventCard::mousePressEvent(QMouseEvent *event)
         DragStartPosition = event->pos();
         setCursor(Qt::ClosedHandCursor);
 
-        QPoint y = event->globalPos();         // Положение мыши относительно левого верхнего угла рабочего стола, глобальное положение мыши
-        QPoint x = this->geometry().topLeft(); // Положение левого верхнего угла окна относительно верхнего угла рабочего стола, положение окна
-        this-> z =  y-x;                       // фиксированное значение, без изменений
-
         PreviousPos = IndexCell(geometry().center());
         buffPos = IndexCell(geometry().center());
     }
+
+    QPoint y = event->globalPos();         // Положение мыши относительно левого верхнего угла рабочего стола, глобальное положение мыши
+    QPoint x = this->geometry().topLeft(); // Положение левого верхнего угла окна относительно верхнего угла рабочего стола, положение окна
+    this-> z =  y-x;                       // фиксированное значение, без изменений
 
     //qDebug() << "Координата курсора " << event->pos();
     //qDebug() << "Позиция Card " << this->pos();

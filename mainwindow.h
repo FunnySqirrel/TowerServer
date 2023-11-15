@@ -10,7 +10,9 @@
 QT_BEGIN_NAMESPACE
 
 class EventCalendar;
+class QLabel;
 class QPropertyAnimation;
+class QPushButton;
 class QSqlTableModel;
 class QSqlQuery;
 
@@ -27,20 +29,15 @@ public:
 
 private slots:
     void on_AddButton_clicked(); //СЛОТ-обработчик нажатия кнопки добавления
-
     void on_DelButton_clicked(); //СЛОТ-обработчик нажатия кнопки удаления
-
     void on_tableView_clicked(const QModelIndex &index);
-
     void on_CloseButton_clicked(); //СЛОТ-обработчик нажатия кнопки закрытия приложения
-
     void on_MinimizedButton_clicked(); //СЛОТ-обработчик нажатия кнопки сворачивания приложения
-
     void on_Maximized_NormalButton_clicked(); //СЛОТ-обработчик нажатия кнопки разворачивания на полный экран приложения
-
     void on_UsersButton_clicked();
-
     void on_EventsButton_clicked();
+    void onButtonBackClicked();
+    void onButtonForwardClicked();
 
 private:
     Ui::MainWindow *ui;
@@ -52,6 +49,9 @@ private:
     QPropertyAnimation *SideBarAnim;
     QPropertyAnimation *SideBarUsersButtonAnim;
     QPropertyAnimation *SideBarEventsButtonAnim;
+    QPushButton *ButtonBack;
+    QPushButton *ButtonForward;
+    QLabel *lCalendar;
     int CurrentRow;
     bool mMoving;
     QPoint z;
@@ -63,11 +63,12 @@ private:
     void mouseReleaseEvent(QMouseEvent *event);
     void ChangeButtonStatus(int Num);
     void fSideBarAnim(int duration, int startValue, int endValue);
-    QVariant StringInterpolator(const QString &start, const QString &end, qreal progress);
+    void lCalendarDate(int Pg);
 
 public:
     void updateUsers();
     // QObject interface
     virtual bool eventFilter(QObject *watched, QEvent *event) override;
+
 };
 #endif // MAINWINDOW_H

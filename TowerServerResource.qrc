@@ -8,11 +8,12 @@
         <file>Resources/Add.png</file>
         <file>Resources/Sidebar.png</file>
         <file>Resources/ButtonIcon.png</file>
-        <file>Resources/Arrow.png</file>
+        <file>Resources/ArrowR.png</file>
         <file>Resources/Users.png</file>
         <file>Resources/UsersActive.png</file>
         <file>Resources/Events.png</file>
         <file>Resources/EventsActive.png</file>
+        <file>Resources/ArrowL.png</file>
     </qresource>
     <qresource prefix="/fonts">
         <file>Resources/Fonts/ARIALUNI.TTF</file>

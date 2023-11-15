@@ -3,7 +3,6 @@
 #include "mystyleui.h"
 
 #include <QLabel>
-#include <QPushButton>
 #include <QStackedWidget>
 #include <QVBoxLayout>
 
@@ -12,21 +11,6 @@ using namespace std::chrono;
 EventCalendar::EventCalendar(QWidget *parent)
     : QWidget{parent}
 {
-    ButtonBack = new QPushButton(this);
-    ButtonBack->setText("<<<");
-    ButtonBack->setEnabled(false);
-    ButtonBack->setStyleSheet(MyStyleUI::GetButtonBackStyle());
-    ButtonBack->setIconSize(QSize(50, 50));
-    ButtonBack->setMaximumHeight(55);
-
-    ButtonForward = new QPushButton(this);
-    ButtonForward->setStyleSheet(MyStyleUI::GetButtonForwardStyle());
-    ButtonForward->setIconSize(QSize(100, 100));
-    ButtonForward->setMaximumHeight(55);
-
-    connect(ButtonBack, SIGNAL(clicked()), this, SLOT(onButtonBackClicked()));
-    connect(ButtonForward, SIGNAL(clicked()), this, SLOT(onButtonForwardClicked()));
-
     StackedWidget = new QStackedWidget(this);
 
     for (int i = 0; i < 5; ++i) {
@@ -34,48 +18,16 @@ EventCalendar::EventCalendar(QWidget *parent)
         StackedWidget->addWidget(Page.last());
     }
 
-    lCalendar = new QLabel(this);
-    lCalendarDate(0);
-    lCalendar->setAlignment(Qt::AlignCenter);
-    lCalendar->setStyleSheet(MyStyleUI::GetlCalendarStyle());
-
     VLayout = new QVBoxLayout(this);
     VLayout->setContentsMargins(0, 0, 0, 0);
     VLayout->setSpacing(0);
     HLayout = new QHBoxLayout(this);
-
-    VLayout->addLayout(HLayout);
-    HLayout->addWidget(ButtonBack);
-    HLayout->addWidget(lCalendar);
-    HLayout->addWidget(ButtonForward);
 
     VLayout->addWidget(StackedWidget);
     setLayout(VLayout);
     setContentsMargins(0, 0, 0, 0);
 
     startTimer(1h);
-}
-
-void EventCalendar::onButtonBackClicked()
-{
-    if(StackedWidget->currentIndex() > 0) {
-        StackedWidget->setCurrentIndex(StackedWidget->currentIndex() - 1);
-        lCalendarDate(StackedWidget->currentIndex());
-        ButtonForward->setEnabled(true);
-    }
-    else ButtonBack->setEnabled(false);
-}
-
-void EventCalendar::onButtonForwardClicked()
-{
-    if(StackedWidget->currentIndex() < 4) {
-        StackedWidget->setCurrentIndex(StackedWidget->currentIndex() + 1);
-        lCalendarDate(StackedWidget->currentIndex());
-        ButtonBack->setEnabled(true);
-    }
-    else {
-        ButtonForward->setEnabled(false);
-    }
 }
 
 QString EventCalendar::DateToString(int Month)
@@ -108,14 +60,6 @@ QString EventCalendar::DateToString(int Month)
         return "Декабрь";
     default: break;
     }
-}
-
-void EventCalendar::lCalendarDate(int Pg)
-{
-    if(Page[Pg]->Date[0].month() == Page[Pg]->Date[6].month())
-        lCalendar->setText(DateToString(Page[Pg]->Date[0].month()) + Page[Pg]->Date[0].toString(" d") + " - " + Page[Pg]->Date[6].toString("d"));
-
-    else lCalendar->setText(DateToString(Page[Pg]->Date[0].month()) + Page[Pg]->Date[0].toString(" d") + " - " + DateToString(Page[Pg]->Date[6].month()) + Page[Pg]->Date[6].toString(" d"));
 }
 
 //Не протестированно

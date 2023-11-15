@@ -50,6 +50,9 @@
     </property>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QFrame" name="frame">
         <property name="minimumSize">
@@ -212,6 +215,12 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_5">
            <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
             <number>0</number>
            </property>
            <item>

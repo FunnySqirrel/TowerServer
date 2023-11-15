@@ -22,15 +22,11 @@ public:
     QVBoxLayout *VLayout;
     QHBoxLayout *HLayout;
 
+    QString DateToString (int Month);
+
 signals:
 
-private slots:
-    void onButtonBackClicked();
-    void onButtonForwardClicked();
-
 private:
-    QString DateToString (int Month);
-    void lCalendarDate (int Pg);
     QTime Interval/* = (23, 59, 59, 999)*/;
 
 

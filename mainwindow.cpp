@@ -1,11 +1,14 @@
 #include <QFontDatabase>
+#include <QPropertyAnimation>
+#include <QSqlError>
+#include <QSqlTableModel>
+#include <QSqlQuery>
+#include <QMouseEvent>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "mystyleui.h"
 #include "dbmanager.h"
-
-
 #include "eventcalendar.h"
 
 //#include "paintcelldelegate.h"
@@ -104,48 +107,86 @@ void MainWindow::on_Maximized_NormalButton_clicked()
     isMaximized() ? ui->Maximized_NormalButton->setToolTip (tr ("Свернуть в окно")) : ui->Maximized_NormalButton->setToolTip (tr ("Развернуть"));
 }
 
+QVariant MainWindow::StringInterpolator(const QString &start, const QString &end, qreal progress)
+{
+    if(progress < 1.0)
+        return start;
+    else
+        return end;
+}
+
 //Реализация собственного пользовательского интерфейса
+void MainWindow::fSideBarAnim(int duration, int startValue, int endValue)
+{
+    SideBarAnim = new QPropertyAnimation(ui->Sidebar, "minimumWidth", ui->Sidebar);
+    SideBarUsersButtonAnim = new QPropertyAnimation(ui->UsersButton, "maximumWidth", ui->UsersButton);
+    SideBarEventsButtonAnim = new QPropertyAnimation(ui->EventsButton, "maximumWidth", ui->EventsButton);
+    SideBarAnim->setDuration(duration);
+    SideBarAnim->setStartValue(startValue);
+    SideBarAnim->setEndValue(endValue);
+    if(endValue > ui->UsersButton->minimumWidth()) {
+        SideBarUsersButtonAnim->setEndValue(endValue);
+        SideBarEventsButtonAnim->setEndValue(endValue);
+    }
+    else {
+        SideBarUsersButtonAnim->setEndValue(ui->UsersButton->minimumWidth());
+        SideBarEventsButtonAnim->setEndValue(ui->EventsButton->minimumWidth());
+    }
+    SideBarUsersButtonAnim->setDuration(duration);
+    SideBarEventsButtonAnim->setDuration(duration);
+    SideBarAnim->start(QAbstractAnimation::DeleteWhenStopped);
+    SideBarUsersButtonAnim->start(QAbstractAnimation::DeleteWhenStopped);
+    SideBarEventsButtonAnim->start(QAbstractAnimation::DeleteWhenStopped);
+
+}
+
 void MainWindow::SetInterfaceStyle()
 {
+    //Кнопка закрытия приложения
     ui->CloseButton->setToolTip (tr ("Закрыть"));
     ui->CloseButton->setStyleSheet(MyStyleUI::GetCloseButtonsStyle());
     ui->CloseButton->setIconSize(QSize(20, 20));
 
+    //Кнопка "развернуть на полный экран"
     ui->Maximized_NormalButton->setToolTip (tr ("Развернуть"));
     ui->Maximized_NormalButton->setStyleSheet(MyStyleUI::GetMaximized_NormalButtonsStyle());
     ui->Maximized_NormalButton->setIconSize(QSize(20, 20));
 
+    //Кнопка сворачивания окна
     ui->MinimizedButton->setToolTip (tr ("Свернуть"));
     ui->MinimizedButton->setStyleSheet(MyStyleUI::GetMinimizedButtonStyle());
     ui->MinimizedButton->setIconSize(QSize(20, 20));
 
+    //Кнопка удаления пользователя из базы данных
     ui->DelButton->setToolTip (tr ("Удалить"));
     ui->DelButton->setStyleSheet(MyStyleUI::GetDelButtonStyle());
     ui->DelButton->setIconSize(QSize(30, 30));
 
+    //Кнопка добавления пользователя в базу данных
     ui->AddButton->setToolTip (tr ("Добавить"));
     ui->AddButton->setStyleSheet(MyStyleUI::GetAddButtonStyle());
     ui->AddButton->setIconSize(QSize(30, 30));
 
+    //Блок кнопок на сайдбаре
     ui->UsersButton->setStyleSheet(MyStyleUI::GetSideBarButtonActiveStyle("icon: url(:/images/Resources/UsersActive.png)"));
     ui->UsersButton->setMinimumSize(55, 55);
+    ui->UsersButton->setMaximumSize(55, 55);
     ui->UsersButton->setIconSize(QSize(50, 50));
     ui->EventsButton->setStyleSheet(MyStyleUI::GetSideBarButtonStyle("icon: url(:/images/Resources/Events.png)"));
     ui->EventsButton->setMinimumSize(55, 55);
+    ui->EventsButton->setMaximumSize(55, 55);
     ui->EventsButton->setIconSize(QSize(50, 50));
+
+    //Sidebar
+    ui->Sidebar->setMinimumWidth(ui->EventsButton->minimumWidth());
 
     ui->frame->setStyleSheet(MyStyleUI::GetFrameStyle());
     ui->tableView->setStyleSheet(MyStyleUI::GetTableStyle());
     ui->NameProg->setStyleSheet(MyStyleUI::GetNameProgStyle());
-    ui->SidebarFrame->installEventFilter(this);
-    //ui->SidebarFrame->setMinimumWidth(60);
+    ui->Sidebar->installEventFilter(this);
+
     //ui->tableView->setItemDelegate(new PaintCellDelegate);
 
-    // Получить размер главного окна
-    int width = this->width();
-    int height = this->height();
-
-    ui->tableView->resize(width,height); // Настройте размер окна tableView, чтобы он соответствовал основному окну (Не работает)
 }
 
 //Реализация перемещения окна
@@ -211,14 +252,14 @@ void MainWindow::on_EventsButton_clicked()
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if(watched == ui->SidebarFrame && event->type() == QEvent::Enter) {
-        ui->SidebarFrame->setMinimumWidth(220);
+    if(watched == ui->Sidebar && event->type() == QEvent::Enter) {
+        fSideBarAnim(250, 55, 220);
         ui->UsersButton->setText("Пользователи карт");
         ui->EventsButton->setText("Мероприятия");
         return true;
     }
-    else if(watched == ui->SidebarFrame && event->type() == QEvent::Leave) {
-        ui->SidebarFrame->setMinimumWidth(0);
+    else if(watched == ui->Sidebar && event->type() == QEvent::Leave) {
+        fSideBarAnim(250, 220, 55);
         ui->UsersButton->setText(NULL);
         ui->EventsButton->setText(NULL);
         return true;

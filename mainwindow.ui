@@ -339,7 +339,7 @@ background-color: white;</string>
          <number>0</number>
         </property>
         <item>
-         <widget class="QFrame" name="SidebarFrame">
+         <widget class="QFrame" name="Sidebar">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -374,10 +374,16 @@ border: none;
              </property>
              <item>
               <widget class="QPushButton" name="UsersButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>40</height>
+                 <height>0</height>
                 </size>
                </property>
                <property name="text">
@@ -387,6 +393,12 @@ border: none;
              </item>
              <item>
               <widget class="QPushButton" name="EventsButton">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>0</width>

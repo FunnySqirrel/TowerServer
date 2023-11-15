@@ -3,22 +3,17 @@
 
 #include <QMainWindow>
 #include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlTableModel>
-#include <QSqlQuery>
-#include <QObject>
-#include <QWidget>
-#include <QMouseEvent>
 //#include <QTableView>
-
-
-//#include <qdynamicbutton.h>
 
 #include "server.h"
 
 QT_BEGIN_NAMESPACE
 
 class EventCalendar;
+class QPropertyAnimation;
+class QSqlTableModel;
+class QSqlQuery;
+
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
@@ -43,7 +38,6 @@ private slots:
 
     void on_Maximized_NormalButton_clicked(); //СЛОТ-обработчик нажатия кнопки разворачивания на полный экран приложения
 
-
     void on_UsersButton_clicked();
 
     void on_EventsButton_clicked();
@@ -54,15 +48,23 @@ private:
     QSqlTableModel *UserCardsModel;
     QSqlQuery *Query;
     EventCalendar *Calendar;
+    static Server* m_pServer;
+    QPropertyAnimation *SideBarAnim;
+    QPropertyAnimation *SideBarUsersButtonAnim;
+    QPropertyAnimation *SideBarEventsButtonAnim;
     int CurrentRow;
     bool mMoving;
+    QPoint z;
+
+    //Функции
     void SetInterfaceStyle();
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void ChangeButtonStatus(int Num);
-    QPoint z;
-    static Server* m_pServer;
+    void fSideBarAnim(int duration, int startValue, int endValue);
+    QVariant StringInterpolator(const QString &start, const QString &end, qreal progress);
+
 public:
     void updateUsers();
     // QObject interface

@@ -141,22 +141,22 @@ QString MyStyleUI::GetTableStyle()
         "background-color: rgb(64, 64, 64);"
         "border: 5px solid #f6f7fa;"
         "border-radius:0px;"
-        "border-color: white;"                              //rgb(64, 64, 64)
+        "border-color: white;"                                        //rgb(64, 64, 64)
         "}"
 
-             "QTableView {"
-                     "Color: #5969BC;"                              // цвет текста в таблице
-                     "font-family: ARIALUNI;"
-                     "font-size: 16px;"
-                     "gridline-color: white;"                       //Цвет внутренней рамки
-                     "Background-color: #CBDFFF;"           // цвет фона в таблице #CBDFFF;
-                     "alternate-background-color: #CBDFFF;"
-                     "Selection-color: white;"                      // Цвет текста в выделенной области
-                     "Selection-background-color: rgb(77, 77, 77);" //Цвет фона выбранной области
-                     //"border: 2px groove gray;"
-                     //"border-radius: 0px;"
-                //"padding: 2px 4px;"
-                        "}"
+        "QTableView {"
+        "Color: #4269A6;"                                // цвет текста в таблице
+        "font-family: ARIALUNI;"
+        "font-size: 16px;"
+        "gridline-color: white;"                         //Цвет внутренней рамки
+        "Background-color: #CBDFFF;"                     // цвет фона в таблице #CBDFFF;
+        "alternate-background-color: #CBDFFF;"
+        "Selection-color: #E2EDFF;"                      // Цвет текста в выделенной области
+        "Selection-background-color: #4269A6;"           //Цвет фона выбранной области
+        //"border: 2px groove gray;"
+        //"border-radius: 0px;"
+        //"padding: 2px 4px;"
+        "}"
 
         "QHeaderView::item {"
         "border: 4px solid white;"
@@ -195,6 +195,8 @@ QString MyStyleUI::GetSideBarButtonStyle(QString iconUrl)
            "font-family: ARIALUNI;"
            "font-size: 16px;"
            "line-height: 1.0;"
+           "text-align: left;"
+           "padding: 2.5px;"
            "color: rgb(100, 100, 100);"
            + iconUrl
            + "}"
@@ -214,6 +216,8 @@ QString MyStyleUI::GetSideBarButtonActiveStyle(QString iconUrl)
            "background: transparent;"
            "font-family: ARIALUNI;"
            "font: 16px;"
+           "text-align: left;"
+           "padding: 2.5px;"
            + iconUrl
            + "}";
 }

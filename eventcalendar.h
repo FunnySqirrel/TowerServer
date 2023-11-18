@@ -6,9 +6,7 @@
 #include "eventcard.h"
 #include "calendarpage.h"
 
-#include <QScrollArea>
-#include <QStackedWidget>
-
+class QStackedWidget;
 class QLabel;
 
 class EventCalendar : public QWidget
@@ -19,21 +17,22 @@ public:
     QLabel *lCalendar;
     QPushButton *ButtonBack;
     QPushButton *ButtonForward;
-    CalendarPage *Page[5];
+    QList <CalendarPage*> Page;
     QStackedWidget *StackedWidget;
     QVBoxLayout *VLayout;
     QHBoxLayout *HLayout;
 
+    QString DateToString (int Month);
+
 signals:
 
-private slots:
-    void onButtonBackClicked();
-    void onButtonForwardClicked();
-
 private:
-    QString DateToString (int Month);
-    void lCalendarDate (int Pg);
+    QTime Interval/* = (23, 59, 59, 999)*/;
 
+
+    // QObject interface
+protected:
+    virtual void timerEvent(QTimerEvent *event) override;
 };
 
 #endif // EVENTCALENDAR_H

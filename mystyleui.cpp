@@ -141,22 +141,22 @@ QString MyStyleUI::GetTableStyle()
         "background-color: rgb(64, 64, 64);"
         "border: 5px solid #f6f7fa;"
         "border-radius:0px;"
-        "border-color: white;"                              //rgb(64, 64, 64)
+        "border-color: white;"                                        //rgb(64, 64, 64)
         "}"
 
-             "QTableView {"
-                     "Color: #5969BC;"                              // цвет текста в таблице
-                     "font-family: ARIALUNI;"
-                     "font-size: 16px;"
-                     "gridline-color: white;"                       //Цвет внутренней рамки
-                     "Background-color: #CBDFFF;"           // цвет фона в таблице #CBDFFF;
-                     "alternate-background-color: #CBDFFF;"
-                     "Selection-color: white;"                      // Цвет текста в выделенной области
-                     "Selection-background-color: rgb(77, 77, 77);" //Цвет фона выбранной области
-                     //"border: 2px groove gray;"
-                     //"border-radius: 0px;"
-                //"padding: 2px 4px;"
-                        "}"
+        "QTableView {"
+        "Color: #4269A6;"                                // цвет текста в таблице
+        "font-family: ARIALUNI;"
+        "font-size: 16px;"
+        "gridline-color: white;"                         //Цвет внутренней рамки
+        "Background-color: #CBDFFF;"                     // цвет фона в таблице #CBDFFF;
+        "alternate-background-color: #CBDFFF;"
+        "Selection-color: #E2EDFF;"                      // Цвет текста в выделенной области
+        "Selection-background-color: #4269A6;"           //Цвет фона выбранной области
+        //"border: 2px groove gray;"
+        //"border-radius: 0px;"
+        //"padding: 2px 4px;"
+        "}"
 
         "QHeaderView::item {"
         "border: 4px solid white;"
@@ -185,39 +185,41 @@ QString MyStyleUI::GetTableStyle()
             "}";
 }
 
-QString MyStyleUI::GetLeftButtonStyle()
+QString MyStyleUI::GetSideBarButtonStyle(QString iconUrl)
 {
     return "QPushButton"
-            "{"
-                //"background-color: rgb(75, 75, 75);"
-                "border: none;"
-                "border-radius: 12px;"
-                "background: transparent;"
-                "font-family: ARIALUNI;"
-                "font-size: 16px;"
-                "line-height: 1.0;"
-                "color: rgb(200, 200, 200);"
-            "}"
+           "{"
+           "border: none;"
+           "border-radius: 12px;"
+           "background: transparent;"
+           "font-family: ARIALUNI;"
+           "font-size: 16px;"
+           "line-height: 1.0;"
+           "text-align: left;"
+           "padding: 2.5px;"
+           "color: rgb(100, 100, 100);"
+           + iconUrl
+           + "}"
 
-            "QPushButton::hover { "
-            "text-decoration: underline;"
-            "}";
+           "QPushButton::hover { "
+           "background-color: #e2edff;"
+           "}";
 }
 
-QString MyStyleUI::GetLeftActiveButtonStyle()
+QString MyStyleUI::GetSideBarButtonActiveStyle(QString iconUrl)
 {
     return "QPushButton"
-            "{"
-                //"background-color: rgb(75, 75, 75);"
-                "color: rgb(200, 200, 200);"
-                "border: none;"
-                "border-radius: 12px;"
-                "background: transparent;"
-                "font-family: ARIALUNI;"
-                "font: bold 16px;"
-                "text-transform: uppercase;"
-                "text-decoration: underline;"
-           "}";
+           "{"
+           "color: #E2EDFF;"
+           "border: none;"
+           "border-radius: 12px;"
+           "background: transparent;"
+           "font-family: ARIALUNI;"
+           "font: 16px;"
+           "text-align: left;"
+           "padding: 2.5px;"
+           + iconUrl
+           + "}";
 }
 
 QString MyStyleUI::GetNameProgStyle()
@@ -235,7 +237,7 @@ QString MyStyleUI::GetQlineStyle()
 {
     return "QLineEdit"
            "{"
-           "Color: #5969BC;"
+           "Color: #4269A6;"
            //"font-family: ARIALUNI;"
            //"font-size: 13px;"
            "border: 1px solid rgb(155, 195, 255);"
@@ -254,12 +256,13 @@ QString MyStyleUI::GetQLabelCardStyle()
            "}";
 }
 
-QString MyStyleUI::GetQLabelCurrentPageStyle()
+QString MyStyleUI::GetQLabelCurrentDatePageStyle()
 {
     return "QLabel"
            "{"
            "background-color: #4269A6;"
            //"background-color: #355AA8;"
+           "color: #E2EDFF;"
            "}";
 }
 
@@ -268,6 +271,7 @@ QString MyStyleUI::GetQLabelPageStyle()
     return "QLabel"
            "{"
            "background-color: rgb(203, 223, 255);"
+           "color: #4269A6;"
            "}";
 }
 
@@ -305,7 +309,8 @@ QString MyStyleUI::GetButtonBackStyle()
     return "QPushButton"
            "{"
            "background-color: #4269A6;"
-           //"icon: url(:/images/Resources/Arrow.png)"
+           "border: none;"
+           "icon: url(:/images/Resources/ArrowL.png)"
            "}"
            "QPushButton::hover"
            "{"
@@ -322,9 +327,9 @@ QString MyStyleUI::GetButtonForwardStyle()
     return "QPushButton"
            "{"
            "background-color: #4269A6;"
-           "border: outset;"
-           "border-width: 2px;"
-           "icon: url(:/images/Resources/Arrow.png)"
+           //"border: outset;"
+           "border: none;"
+           "icon: url(:/images/Resources/ArrowR.png)"
            "}"
            "QPushButton::hover"
            "{"
@@ -333,7 +338,18 @@ QString MyStyleUI::GetButtonForwardStyle()
         "QPushButton::pressed"
         "{"
            "background-color: #C9EDFF;"
-        "}";
+           "}";
+}
+
+QString MyStyleUI::GetlCalendarStyle()
+{
+    return "QLabel"
+           "{"
+           "background-color: #4269A6;"
+           "font-family: ARIALUNI;"
+           "font-size: 18px;"
+           "color: #E2EDFF;"
+           "}";
 }
 
 

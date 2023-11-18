@@ -30,6 +30,10 @@ public:
     QVector <QPushButton*> DarkButton;
     QWidget *mw;
 
+    int GetXCoord(QPoint WidgetPosition);
+    int GetYCoord(QPoint WidgetPosition);
+    inline int IndexCell(QPoint WidgetPosition);
+
 signals:
 
 private slots:
@@ -44,9 +48,6 @@ private:
     void SetDate(QDate PDate);
     void Init();
 
-protected:
-    // QObject interface
-    virtual void timerEvent(QTimerEvent *event) override;
 };
 
 #endif // CALENDARPAGE_H

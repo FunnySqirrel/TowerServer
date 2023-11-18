@@ -16,17 +16,18 @@ public:
     static QString GetDelButtonStyle();
     static QString GetAddButtonStyle();
     static QString GetTableStyle();
-    static QString GetLeftButtonStyle();
-    static QString GetLeftActiveButtonStyle();
+    static QString GetSideBarButtonStyle(QString iconUrl = NULL);
+    static QString GetSideBarButtonActiveStyle(QString iconUrl = NULL);
     static QString GetNameProgStyle();
     static QString GetQlineStyle();
     static QString GetQLabelCardStyle();
-    static QString GetQLabelCurrentPageStyle();
+    static QString GetQLabelCurrentDatePageStyle();
     static QString GetQLabelPageStyle();
     static QString GetDarkButtonTransparentStyle();
     static QString GetDarkButtonHoverStyle();
     static QString GetButtonBackStyle();
     static QString GetButtonForwardStyle();
+    static QString GetlCalendarStyle();
 };
 
 #endif // MYSTYLEUI_H

@@ -45,12 +45,12 @@ QSize EventCard::sizeHint() const
     return QSize(166, 145);
 }
 
-EventCard::EventCard(CalendarPage *pcp, QWidget *parent)
+EventCard::EventCard(CalendarPage *ParentCalendarPage, QWidget *parent)
     : QWidget{parent}
 {
     ResID++;
     EventID = ResID;
-    ParentCalendarPage = pcp;
+    PCalendarPage = ParentCalendarPage;
 
     setStyleSheet("EventCard"
                   "{"
@@ -240,7 +240,7 @@ EventCard::~EventCard()
     //delete HLayout[4];
     //delete Del;
     //delete shadow_effect;
-    //delete ParentCalendarPage;
+    //delete PCalendarPage;
     //if(Registration != nullptr) {
     //delete Registration;
     //delete VDialogLayout;
@@ -257,28 +257,9 @@ int EventCard::getID()
     return EventID;
 }
 
-/*Функция переводит координаты курсора в координаты сетки
-Если курсор заходит на заголовок, то возвращаем -1
-Если курсор попадает в остальную часть возвращаем индекс поля подсветки*/
-int EventCard::GetXCoord(QPoint WidgetPosition)
-{
-    int WidthHeader = ParentCalendarPage->lDayOfTheWeek[0]->width() + ParentCalendarPage->GridLayout->horizontalSpacing() + ParentCalendarPage->ScrollArea->contentsMargins().left();
-    int FieldWidth = ParentCalendarPage->mw->width() - WidthHeader;
-    int CellWidth = FieldWidth / (ParentCalendarPage->GridLayout->columnCount() - 1);
-    if(WidthHeader > WidgetPosition.x()) return -1;
-    else if(ParentCalendarPage->mw->width() - 10 < WidgetPosition.x()) return ParentCalendarPage->GridLayout->columnCount() - 2;
-    else return ((WidgetPosition.x() - WidthHeader)/ CellWidth);
-}
-
-int EventCard::GetYCoord(QPoint WidgetPosition)
-{
-    if(WidgetPosition.y() / height() < ParentCalendarPage->GridLayout->rowCount()) return WidgetPosition.y() / height();
-    else return ParentCalendarPage->GridLayout->rowCount() - 1;
-}
-
 int EventCard::IndexCell(QPoint WidgetPosition)
 {
-    if(GetXCoord(WidgetPosition) != -1) return 5 * GetYCoord(WidgetPosition) + GetXCoord(WidgetPosition);
+    if(PCalendarPage->GetXCoord(WidgetPosition) > -1) return (PCalendarPage->GridLayout->columnCount() - 1) * PCalendarPage->GetYCoord(WidgetPosition) + PCalendarPage->GetXCoord(WidgetPosition);
 }
 
 void EventCard::on_bSignUpClicked()
@@ -330,7 +311,6 @@ void EventCard::on_bSignUpClicked()
 
 void EventCard::on_leNumberOfSeatsTextChanged()
 {
-    //bool ok;
     if(leNumberOfSeats->text().toInt() > 0) bSignUp->setEnabled(true);
     else bSignUp->setEnabled(false);
     qDebug() << "Текст изменися";
@@ -340,7 +320,7 @@ void EventCard::onDelButtonClicked()
 {
     //this->hide();
     this->deleteLater();
-    ParentCalendarPage->DarkButton[IndexCell(geometry().center())]->show();
+    PCalendarPage->DarkButton[IndexCell(geometry().center())]->show();
 }
 
 int EventCard::ResID = 0;
@@ -353,46 +333,45 @@ void EventCard::mousePressEvent(QMouseEvent *event)
         DragStartPosition = event->pos();
         setCursor(Qt::ClosedHandCursor);
 
-        QPoint y = event->globalPos();         // Положение мыши относительно левого верхнего угла рабочего стола, глобальное положение мыши
-        QPoint x = this->geometry().topLeft(); // Положение левого верхнего угла окна относительно верхнего угла рабочего стола, положение окна
-        this-> z =  y-x;                       // фиксированное значение, без изменений
-
         PreviousPos = IndexCell(geometry().center());
         buffPos = IndexCell(geometry().center());
     }
-    //qDebug() << "Координата виджета " << event->pos();
+
+    QPoint y = event->globalPos();         // Положение мыши относительно левого верхнего угла рабочего стола, глобальное положение мыши
+    QPoint x = this->geometry().topLeft(); // Положение левого верхнего угла окна относительно верхнего угла рабочего стола, положение окна
+    this-> z =  y-x;                       // фиксированное значение, без изменений
+
+    //qDebug() << "Координата курсора " << event->pos();
     //qDebug() << "Позиция Card " << this->pos();
     //qDebug() << "Размер карточки: " << this->size();
-    //qDebug() << "Индекс элемента в сетке: " << ParentCalendarPage->GridLayout->indexOf(this);
-    //qDebug() << ParentCalendarPage->ScrollArea->size();
+    //qDebug() << "Индекс элемента в сетке: " << PCalendarPage->GridLayout->indexOf(this);
+    //qDebug() << "Размер ScrollArea " << PCalendarPage->ScrollArea->size();
     //qDebug() << "Локальная позиция " << event->position();
     //qDebug() << "Позиция сцены " << event->scenePosition();
     //qDebug() << "Глобальная позиция " << event->globalPosition();
-    //qDebug() << "Размер основного виджета: " << ParentCalendarPage->mw->height();
-    //qDebug() << PreviousPos;
-    //qDebug() << "у координата: " << (GetXCoord(ParentCalendarPage->ShadowField[PreviousPos]->geometry().center()));
-    //qDebug() << "x координата: " << (GetYCoord(ParentCalendarPage->ShadowField[PreviousPos]->geometry().center()));
+    //qDebug() << "Размер основного виджета: " << PCalendarPage->mw->size();
+    //qDebug() << "Координата карточки " << geometry().center();
+    //qDebug() << IndexCell(geometry().center());
+    //qDebug() << "у координата: " << (PCalendarPage->GetXCoord(geometry().center()));
+    //qDebug() << "x координата: " << (PCalendarPage->GetYCoord(geometry().center()));
 }
 
 void EventCard::SFHovered(QPoint WidgetPosition)
 {
-    if(GetXCoord(WidgetPosition) < 0) {
-        ParentCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
-        //qDebug() << ParentCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
+    if(PCalendarPage->GetXCoord(WidgetPosition) < 0) {
+        PCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
     }
     //Проверяем находится ли виджет в ячейке под индексом i и выделяем его
     else  {
-        if(ParentCalendarPage->DarkButton[IndexCell(WidgetPosition)]->geometry().contains(this->geometry().center())) {
-            ParentCalendarPage->DarkButton[IndexCell(WidgetPosition)]->setStyleSheet(MyStyleUI::GetDarkButtonHoverStyle());
-            //qDebug() << ParentCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
+        if(PCalendarPage->DarkButton[IndexCell(WidgetPosition)]->geometry().contains(geometry().center())) {
+            PCalendarPage->DarkButton[IndexCell(WidgetPosition)]->setStyleSheet(MyStyleUI::GetDarkButtonHoverStyle());
         }
         //Если предыдущий виджет (под индексом tempPos) не совпадает с нынешним, возвращаем старый цвет и присваиваем буферу новое значение
-        if(ParentCalendarPage->DarkButton[buffPos] != ParentCalendarPage->DarkButton[IndexCell(WidgetPosition)]) {
-            ParentCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
+        if(PCalendarPage->DarkButton[buffPos] != PCalendarPage->DarkButton[IndexCell(WidgetPosition)]) {
+            PCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
             buffPos = IndexCell(WidgetPosition);
-            //qDebug() << ParentCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
         }
-        if(ParentCalendarPage->mw->width() < WidgetPosition.x()) ParentCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
+        if(PCalendarPage->mw->width() < WidgetPosition.x()) PCalendarPage->DarkButton[buffPos]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
     }
 }
 
@@ -404,29 +383,32 @@ void EventCard::mouseMoveEvent(QMouseEvent *event)
     QPoint x = y - this->z;
     this->move(x);
 
-    for (int i = 0; i < ParentCalendarPage->Card.size(); ++i) {
-        if(ParentCalendarPage->Card[i]->getID() == this->getID()) {
-            ParentCalendarPage->GridLayout->removeWidget(ParentCalendarPage->Card[i]);
+    for (int i = 0; i < PCalendarPage->Card.size(); ++i) {
+        if(PCalendarPage->Card[i]->getID() == this->getID()) {
+            PCalendarPage->GridLayout->removeWidget(PCalendarPage->Card[i]);
             break;
         }
     }
 
     SFHovered(geometry().center());
 
-    //int WidthHeader = ParentCalendarPage->lDayOfTheWeek[0]->width() + ParentCalendarPage->GridLayout->horizontalSpacing() + ParentCalendarPage->ScrollArea->contentsMargins().left();
-    //int FieldWidth = ParentCalendarPage->ScrollArea->width() - WidthHeader;
-    //int CellWidth = FieldWidth / (ParentCalendarPage->GridLayout->columnCount() - 1);
-    //qDebug() << "Ширина ScrollArea: " << ParentCalendarPage->ScrollArea->width();
+    //if(PCalendarPage->DarkButton[IndexCell(geometry().center())]->isHidden()) ;
+
+    //int WidthHeader = PCalendarPage->lDayOfTheWeek[0]->width() + PCalendarPage->GridLayout->horizontalSpacing() + PCalendarPage->ScrollArea->contentsMargins().left();
+    //int FieldWidth = PCalendarPage->ScrollArea->width() - WidthHeader;
+    //int CellWidth = FieldWidth / (PCalendarPage->GridLayout->columnCount() - 1);
+    //qDebug() << "Ширина ScrollArea: " << PCalendarPage->ScrollArea->width();
     //qDebug() << "Ширина заголовочника: " << WidthHeader;
     //qDebug() << "Ширина зоны ячеек: " << FieldWidth;
     //qDebug() << "Ширина ячейки: " << CellWidth;
     //qDebug() << "Координата центра карточки: " << geometry().center().x();
-    //qDebug() << "Ширина заголовка: " << WidthHeader; //ParentCalendarPage->lDayOfTheWeek[0]->width();
+    //qDebug() << "Ширина заголовка: " << WidthHeader; //PCalendarPage->lDayOfTheWeek[0]->width();
     //qDebug() << IndexCell(geometry().center());
-    //qDebug() << ParentCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
-    //qDebug() << ParentCalendarPage->ScrollArea->geometry().width();
-    //qDebug() << GetXCoord(geometry().center());
-    //qDebug() << ParentCalendarPage->ShadowField[IndexCell(geometry().center())]->geometry().contains(geometry().center());
+    //qDebug() << PCalendarPage->ShadowField[IndexCell(geometry().center())]->isHidden();
+    //qDebug() << PCalendarPage->ScrollArea->geometry().width();
+    //qDebug() << PCalendarPage->ShadowField[IndexCell(geometry().center())]->geometry().contains(geometry().center());
+    //qDebug() << "у координата: " << (PCalendarPage->GetYCoord(geometry().center()));
+    //qDebug() << "x координата: " << (PCalendarPage->GetXCoord(geometry().center()));
 }
 
 void EventCard::mouseReleaseEvent(QMouseEvent *event)
@@ -435,16 +417,16 @@ void EventCard::mouseReleaseEvent(QMouseEvent *event)
     this-> z = QPoint(); // Конструктор инициализируется 0
 
     //Проверяем если под карточкой пустой слот вставляем ее в него и деактивируем его
-    if(ParentCalendarPage->DarkButton[IndexCell(geometry().center())]->geometry().contains(geometry().center())
-        && ParentCalendarPage->DarkButton[IndexCell(geometry().center())]->isHidden() == false) {
-        ParentCalendarPage->GridLayout->addWidget(this, GetYCoord(geometry().center()), GetXCoord(geometry().center()) + 1);
-        ParentCalendarPage->DarkButton[IndexCell(geometry().center())]->hide();
-        /*if(GetXCoord(geometry().center()) >= 0)*/ ParentCalendarPage->DarkButton[PreviousPos]->show();
+    if(PCalendarPage->DarkButton[IndexCell(geometry().center())]->geometry().contains(geometry().center())
+        && PCalendarPage->DarkButton[IndexCell(geometry().center())]->isHidden() == false) {
+        PCalendarPage->GridLayout->addWidget(this, PCalendarPage->GetYCoord(geometry().center()), PCalendarPage->GetXCoord(geometry().center()) + 1);
+        PCalendarPage->DarkButton[IndexCell(geometry().center())]->hide();
+        /*if(GetXCoord(geometry().center()) >= 0)*/ PCalendarPage->DarkButton[PreviousPos]->show();
     }
     //Если карточка не помещена в ячейку, то она возвращается в предыдущую
     else {
-        ParentCalendarPage->GridLayout->addWidget(this, GetYCoord(ParentCalendarPage->DarkButton[PreviousPos]->geometry().center()),
-            GetXCoord(ParentCalendarPage->DarkButton[PreviousPos]->geometry().center()) + 1);
-        ParentCalendarPage->DarkButton[PreviousPos]->hide();
+        PCalendarPage->GridLayout->addWidget(this, PCalendarPage->GetYCoord(PCalendarPage->DarkButton[PreviousPos]->geometry().center()),
+            PCalendarPage->GetXCoord(PCalendarPage->DarkButton[PreviousPos]->geometry().center()) + 1);
+        PCalendarPage->DarkButton[PreviousPos]->hide();
     }
 }

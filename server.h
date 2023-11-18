@@ -36,13 +36,14 @@ private:
         text =0,
         loginSucsessful=1,
         loginDenied=2,
-        looutSucsessful=3,
+        logoutSucsessful=3,
         logoutDenied=4,
         registrationSucsessful=5,
         registrationDenied=6
     };
 
-    void SendToClient();                        //функция отправки данных клиенту
+    void SendToClient(e_ServerMsgType msgType, QVariantList input);                        //функция отправки данных клиенту
+    void SendToClient(e_ServerMsgType msgType);                        //функция отправки данных клиенту
 
 public slots:
 

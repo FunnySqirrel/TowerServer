@@ -15,8 +15,31 @@ void Server::serverInit()
     qDebug()<<"server started.";
 }
 
-void Server::SendToClient()
+void Server::SendToClient(e_ServerMsgType msgType, QVariantList input)
 {
+    QByteArray data;
+    data.clear();
+    QDataStream out(&data, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_6);
+    out<<qint16(0);
+    out<<msgType;
+    out<<input;
+    out.device()->seek(0);
+    out<<qint16(data.size()-sizeof(qint16));
+    qDebug()<<m_pSocket->write(data);
+}
+
+void Server::SendToClient(e_ServerMsgType msgType)
+{
+    QByteArray data;
+    data.clear();
+    QDataStream out(&data, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_6);
+    out<<qint16(0);
+    out<<msgType;
+    out.device()->seek(0);
+    out<<qint16(data.size()-sizeof(qint16));
+    qDebug()<<m_pSocket->write(data);
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
@@ -69,6 +92,8 @@ void Server::slotReadyRead()
             }
                 break;
             case e_ClientMsgType::logoutRequest:
+            {
+            }
                 break;
             case e_ClientMsgType::registrationRequest:
             {
@@ -77,7 +102,15 @@ void Server::slotReadyRead()
                 QString login = data[2].toString();
                 QString password = data[3].toString();
                 qDebug()<<name<<" "<<birthDate<<" "<<login<<" "<<password;
-                DBManager::add_user(name, birthDate, 0,true, login, password);
+                if(DBManager::add_user(name, birthDate, 0,true, login, password))
+                {
+                    SendToClient(e_ServerMsgType::registrationSucsessful);
+                }
+                else
+                {
+                    SendToClient(e_ServerMsgType::registrationDenied);
+                }
+
             }
                 break;
             default:

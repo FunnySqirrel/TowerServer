@@ -15,8 +15,31 @@ void Server::serverInit()
     qDebug()<<"server started.";
 }
 
-void Server::SendToClient()
+void Server::SendToClient(e_ServerMsgType msgType, QVariantList input)
 {
+    QByteArray data;
+    data.clear();
+    QDataStream out(&data, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_6);
+    out<<qint16(0);
+    out<<msgType;
+    out<<input;
+    out.device()->seek(0);
+    out<<qint16(data.size()-sizeof(qint16));
+    qDebug()<<m_pSocket->write(data);
+}
+
+void Server::SendToClient(e_ServerMsgType msgType)
+{
+    QByteArray data;
+    data.clear();
+    QDataStream out(&data, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_6_6);
+    out<<qint16(0);
+    out<<msgType;
+    out.device()->seek(0);
+    out<<qint16(data.size()-sizeof(qint16));
+    qDebug()<<m_pSocket->write(data);
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
@@ -36,7 +59,7 @@ void Server::slotReadyRead()
     m_pSocket = (QTcpSocket*)sender();
     qint16 blocksize=0;
     QDataStream in(m_pSocket);
-    e_MsgType msgType;
+    e_ClientMsgType msgType;
     in.setVersion(QDataStream::Qt_6_6);
     if(in.status() == QDataStream::Ok)
     {
@@ -59,25 +82,35 @@ void Server::slotReadyRead()
             in>>data;
             switch(msgType)
             {
-            case e_MsgType::text:
+            case e_ClientMsgType::text:
                 break;
-            case e_MsgType::loginRequest:
+            case e_ClientMsgType::loginRequest:
             {
                 QString login = data[0].toString();
                 QString password = data[1].toString();
                 qDebug()<<""<<login<<" "<<password;
             }
                 break;
-            case e_MsgType::logoutRequest:
+            case e_ClientMsgType::logoutRequest:
+            {
+            }
                 break;
-            case e_MsgType::registrationRequest:
+            case e_ClientMsgType::registrationRequest:
             {
                 QString name = data[0].toString();
                 QString birthDate = data[1].toString();
                 QString login = data[2].toString();
                 QString password = data[3].toString();
                 qDebug()<<name<<" "<<birthDate<<" "<<login<<" "<<password;
-                DBManager::add_user(name, birthDate, 0,true, login, password);
+                if(DBManager::add_user(name, birthDate, 0,true, login, password))
+                {
+                    SendToClient(e_ServerMsgType::registrationSucsessful);
+                }
+                else
+                {
+                    SendToClient(e_ServerMsgType::registrationDenied);
+                }
+
             }
                 break;
             default:
@@ -90,8 +123,6 @@ void Server::slotReadyRead()
         qDebug()<<"Datastream Error!";
     }
 }
-
-Server* MyServer::pServer = new Server;
 
 
 

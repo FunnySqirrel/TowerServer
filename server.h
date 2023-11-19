@@ -23,7 +23,7 @@ public:
 private:
 
     QVector<SocketName> m_pSocketVector;       //текущий сокет
-    enum class e_MsgType                        //тип сообщения и команды
+    enum class e_ClientMsgType                        //тип сообщения и команды
     {
         text =0,
         loginRequest=1,
@@ -31,17 +31,24 @@ private:
         registrationRequest=3
     };
 
-    void SendToClient();                        //функция отправки данных клиенту
+    enum class e_ServerMsgType                        //тип сообщения и команды
+    {
+        text =0,
+        loginSucsessful=1,
+        loginDenied=2,
+        logoutSucsessful=3,
+        logoutDenied=4,
+        registrationSucsessful=5,
+        registrationDenied=6
+    };
+
+    void SendToClient(e_ServerMsgType msgType, QVariantList input);                        //функция отправки данных клиенту
+    void SendToClient(e_ServerMsgType msgType);                        //функция отправки данных клиенту
 
 public slots:
 
     void incomingConnection(qintptr socketDescriptor);      //слот на установку соединения
     void slotReadyRead();                                   //слот на прочтение данных
-};
-
-struct MyServer
-{
-    static Server* pServer;
 };
 
 #endif // SERVER_H

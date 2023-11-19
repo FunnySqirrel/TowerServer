@@ -321,6 +321,7 @@ void EventCard::onDelButtonClicked()
     //this->hide();
     this->deleteLater();
     PCalendarPage->DarkButton[IndexCell(geometry().center())]->show();
+    PCalendarPage->DarkButton[IndexCell(geometry().center())]->setStyleSheet(MyStyleUI::GetDarkButtonTransparentStyle());
 }
 
 int EventCard::ResID = 0;

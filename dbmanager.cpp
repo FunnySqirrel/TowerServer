@@ -13,9 +13,15 @@ bool DBManager::connect_to_database()
 {
     bool result = false;
     if(!QFile(DATABASE_NAME).exists())
-    {result = restore_database();}
+    {
+        qDebug() << "Database not exist! Restoring...";
+        result = restore_database();
+    }
     else
-    {result = open_database();}
+    {
+        qDebug() << "Database found. Opening...";
+        result = open_database();
+    }
     return result;
 }
 
@@ -24,9 +30,15 @@ bool DBManager::open_database()
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(DATABASE_NAME);
     if(db.open())
-    {return true;}
+    {
+        qDebug() << "Database opened.";
+        return true;
+    }
     else
-    {return false;}
+    {
+        qDebug() << "Can't open database!";
+        return false;
+    }
 }
 
 bool DBManager::restore_database()
@@ -34,9 +46,16 @@ bool DBManager::restore_database()
     if(open_database())
     {
         if(!create_user_table())
-        {return false;}
-        else
-        {return true;}
+        {
+            qDebug() << "Can't create user table!";
+            return false;
+        }
+        if(!create_event_table())
+        {
+            qDebug() << "Can't create event table!";
+            return false;
+        }
+        return true;
     }
     else
     {
@@ -73,7 +92,29 @@ bool DBManager::create_user_table()
     }
 }
 
-bool DBManager::add_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password)
+bool DBManager::create_event_table()
+{
+    QSqlQuery query;
+    if(query.exec(
+            "create table if not exists " EVENT_TABLE " ("
+            EVENT_ID                    " INTEGER PRIMARY KEY,"
+            EVENT_NAME                  " TEXT NOT NULL,"
+            EVENT_PLACE                 " TEXT NOT NULL,"
+            EVENT_START                 " TEXT UNIQUE NOT NULL,"
+            EVENT_END                   " TEXT NOT NULL,"
+            EVENT_MAX_PARTICIPANTS      " INTEGER DEFAULT 0,"
+            EVENT_CURRENT_PARTICIPANTS  " INTEGER DEFAULT 0);"
+            ))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+int DBManager::add_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password)
 {
     QSqlQuery query;
     query.prepare("INSERT INTO " USER_TABLE " (" USER_NAME ", " USER_BIRTHDATE ", " USER_LOGIN ", " USER_PASSWORD ", " USER_BALANCE ", " USER_ISACTIVE ") "
@@ -89,43 +130,47 @@ bool DBManager::add_user(QString name, QString birthDate, int balance, bool isAc
     if(query.exec())
     {
         m_pOwner->updateUsers();
-        return true;
+        return query.lastError().nativeErrorCode().toInt();
     }
     else
     {
-        return false;
+        return query.lastError().nativeErrorCode().toInt();
     }
-
-
 }
 
-bool DBManager::edit_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password, int id)
+bool DBManager::check_credentials(QString login, QString password, int& id)
 {
     QSqlQuery query;
-    query.prepare("UPDATE " USER_TABLE " SET "
-                  USER_NAME " = :Name, "
-                  USER_BIRTHDATE " = :BirthDate, "
-                  USER_LOGIN " = :Login, "
-                  USER_PASSWORD " = :Password, "
-                  USER_BALANCE " = :Balance, "
-                  USER_ISACTIVE " = :IsActive "
-                  "WHERE " USER_ID " = :ID;"
-                  );
-
-    query.bindValue(":Name", name);
-    query.bindValue(":BirthDate", birthDate);
+    query.prepare("SELECT " USER_PASSWORD " FROM " USER_TABLE " WHERE " USER_LOGIN " LIKE :Login");
     query.bindValue(":Login", login);
-    query.bindValue(":Password", password);
-    query.bindValue(":Balance", balance);
-    query.bindValue(":IsActive", isActive);
-    query.bindValue(":ID", id);
 
-    if(query.exec())
+    query.exec();
+
+    if (!query.next())
     {
+        qDebug() << "Login not found!";
+        return false;
+    }
+    qDebug() << "Login is found";
+    QString dbPassword = query.value(0).toString();
+
+    if (dbPassword == password)
+    {
+        qDebug() << "Password is right. Good boy!";
+        QSqlQuery query;
+        query.prepare("SELECT " USER_ID " FROM " USER_TABLE " WHERE " USER_LOGIN " LIKE :Login");
+        query.bindValue(":Login", login);
+
+        query.exec();
+
+        id = query.value(0).toInt();
+
         return true;
     }
+
     else
     {
+        qDebug() << "Wrong password!";
         return false;
     }
 }

@@ -48,9 +48,9 @@ void Server::incomingConnection(qintptr socketDescriptor)
     m_pSocket->setSocketDescriptor(socketDescriptor);
     connect (m_pSocket, &QTcpSocket::readyRead, this, &Server::slotReadyRead);
     connect (m_pSocket, &QTcpSocket::disconnected, m_pSocket, &QTcpSocket::deleteLater);
-    SocketName socketName;
-    socketName.pSocket = m_pSocket;
-    m_pSocketVector.push_back(socketName);
+    SocketID socketID;
+    socketID.pSocket = m_pSocket;
+    m_pSocketVector.push_back(socketID);
     qDebug()<<""<<socketDescriptor;
 }
 
@@ -89,10 +89,31 @@ void Server::slotReadyRead()
                 QString login = data[0].toString();
                 QString password = data[1].toString();
                 qDebug()<<""<<login<<" "<<password;
+                int id=-1;
+                if (DBManager::check_credentials(login, password,id))
+                {
+                    qDebug()<<"Login Succsessful";
+                    for(auto i:m_pSocketVector)
+                    {
+                        if (i.pSocket == m_pSocket)
+                        {
+                            i.id = id;
+                        }
+                    }
+                    SendToClient(e_ServerMsgType::loginSucsessful);
+                }
             }
                 break;
             case e_ClientMsgType::logoutRequest:
             {
+                for(auto i:m_pSocketVector)
+                {
+                    if (i.pSocket == m_pSocket)
+                    {
+                        qDebug()<<"Logout Succsessful";
+                        i.id = -1;
+                    }
+                }
             }
                 break;
             case e_ClientMsgType::registrationRequest:
@@ -102,12 +123,13 @@ void Server::slotReadyRead()
                 QString login = data[2].toString();
                 QString password = data[3].toString();
                 qDebug()<<name<<" "<<birthDate<<" "<<login<<" "<<password;
-                if(DBManager::add_user(name, birthDate, 0,true, login, password))
+                if(DBManager::add_user(name, birthDate, 0,true, login, password) == 0)
                 {
                     SendToClient(e_ServerMsgType::registrationSucsessful);
                 }
                 else
                 {
+                    qDebug() << "Can't add user!";
                     SendToClient(e_ServerMsgType::registrationDenied);
                 }
 

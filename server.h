@@ -14,15 +14,15 @@ public:
     void serverInit();
 
     QTcpSocket* m_pSocket;
-    struct SocketName
+    struct SocketID
     {
         QTcpSocket* pSocket;
-        QString name = "guest";
+        int id = -1;
     };
 
 private:
 
-    QVector<SocketName> m_pSocketVector;       //текущий сокет
+    QVector<SocketID> m_pSocketVector;       //текущий сокет
     enum class e_ClientMsgType                        //тип сообщения и команды
     {
         text =0,

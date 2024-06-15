@@ -58,7 +58,8 @@ QString EventCalendar::DateToString(int Month)
         return "Ноябрь";
     case 12:
         return "Декабрь";
-    default: break;
+    default:
+        return "unknown mounth";
     }
 }
 

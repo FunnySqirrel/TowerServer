@@ -17,7 +17,6 @@
 #define USER_NAME               "Name"
 #define USER_BIRTHDATE          "Birth_date"
 #define USER_EMAIL              "Email"
-#define USER_PHONE              "Phone"
 #define USER_LOGIN              "Login"
 #define USER_PASSWORD           "Password"
 #define USER_BALANCE            "Balance"
@@ -31,12 +30,6 @@
 #define EVENT_END                   "End_time"
 #define EVENT_MAX_PARTICIPANTS      "Max_participants"
 #define EVENT_CURRENT_PARTICIPANTS  "Current_participants"
-#define EVENT_PARTICIPANTS_LIST     "Participants_list"
-
-#define TICKET_TABLE                "Ticket_table"
-#define TICKET_ID                   "ID"
-#define TICKET_EVENT                "Event"
-#define TICKET_USER                 "User"
 
 class DBManager
 {
@@ -56,15 +49,9 @@ public:
 
     static bool create_user_table();
     static bool create_event_table();
-    static bool create_ticket_table();
 
-    static bool add_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password);
-    static bool edit_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password, int id);
-    static void delete_user();
-
-    static void get_user();
-    static void gelt_user_list();
-    static QStringList get_user_field(QStringList fields);
+    static int add_user(QString name, QString birthDate, int balance, bool isActive, QString login, QString password);
+    static bool check_credentials(QString login, QString password, int& id);
 
     static void setOwner(MainWindow *owner);
     static void updateTable();

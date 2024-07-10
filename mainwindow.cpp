@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
         ui->tableView->verticalHeader()->hide();
         ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
-        ui->tableView->setColumnHidden(0,true);         //Скрываем ID, чтобы избежать их редактирования
+        //ui->tableView->setColumnHidden(0,true);         //Скрываем ID, чтобы избежать их редактирования
 
         ui->tabWidget->tabBar()->hide(); //Скрыть названия вкладок
 

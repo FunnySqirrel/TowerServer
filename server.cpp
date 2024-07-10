@@ -102,6 +102,11 @@ void Server::slotReadyRead()
                     }
                     SendToClient(e_ServerMsgType::loginSucsessful);
                 }
+                else
+                {
+                    qDebug()<<"Login Denied! Wrong Password!";
+                    SendToClient(e_ServerMsgType::loginDenied);
+                }
             }
                 break;
             case e_ClientMsgType::logoutRequest:

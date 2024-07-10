@@ -141,9 +141,8 @@ int DBManager::add_user(QString name, QString birthDate, int balance, bool isAct
 bool DBManager::check_credentials(QString login, QString password, int& id)
 {
     QSqlQuery query;
-    query.prepare("SELECT " USER_PASSWORD " FROM " USER_TABLE " WHERE " USER_LOGIN " LIKE :Login");
+    query.prepare("SELECT " USER_PASSWORD " , " USER_ID " FROM " USER_TABLE " WHERE " USER_LOGIN " LIKE :Login");
     query.bindValue(":Login", login);
-
     query.exec();
 
     if (!query.next())
@@ -153,17 +152,11 @@ bool DBManager::check_credentials(QString login, QString password, int& id)
     }
     qDebug() << "Login is found";
     QString dbPassword = query.value(0).toString();
+    id = query.value(1).toInt();
 
     if (dbPassword == password)
     {
         qDebug() << "Password is right. Good boy!";
-        QSqlQuery query;
-        query.prepare("SELECT " USER_ID " FROM " USER_TABLE " WHERE " USER_LOGIN " LIKE :Login");
-        query.bindValue(":Login", login);
-
-        query.exec();
-
-        id = query.value(0).toInt();
 
         return true;
     }

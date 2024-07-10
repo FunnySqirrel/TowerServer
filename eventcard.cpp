@@ -264,6 +264,8 @@ int EventCard::IndexCell(QPoint WidgetPosition)
 
 void EventCard::on_bSignUpClicked()
 {
+    //if(Registration == nullptr)
+
     Registration = new QDialog(this);
     Registration->setWindowModality(Qt::WindowModality::ApplicationModal); //Запрещает взаимодействовать с главным окном пока открыто диалоговое
     //Registration->setMaximumSize(300, 200);

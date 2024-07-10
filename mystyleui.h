@@ -28,6 +28,8 @@ public:
     static QString GetButtonBackStyle();
     static QString GetButtonForwardStyle();
     static QString GetlCalendarStyle();
+    static QString GetTableHeaderStyle();
+    static QString GetTableHeaderLabelStyle();
 };
 
 #endif // MYSTYLEUI_H

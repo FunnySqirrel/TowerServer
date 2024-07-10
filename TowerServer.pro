@@ -16,7 +16,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mystyleui.cpp \
-    server.cpp
+    server.cpp \
+    table.cpp
 
 HEADERS += \
     dbmanager.h \
@@ -26,6 +27,7 @@ HEADERS += \
     calendarpage.h \
     eventcalendar.h \
     eventcard.h \
+    table.h
 
 FORMS += \
     mainwindow.ui

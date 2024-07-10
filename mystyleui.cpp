@@ -352,4 +352,23 @@ QString MyStyleUI::GetlCalendarStyle()
            "}";
 }
 
+QString MyStyleUI::GetTableHeaderStyle()
+{
+    return "QWidget"
+           "{"
+               "background-color: #c0c1c2;"
+           "}";
+};
+
+QString MyStyleUI::GetTableHeaderLabelStyle()
+{
+    return "QLabel"
+            "{"
+                "background-color: #c9cee5;"
+                "font-family: ARIALUNI;"
+                //"font-size: 30px;"
+                "color: #1e42c7;"
+           "}";
+};
+
 
